@@ -1,0 +1,271 @@
+version: 2
+
+sources:
+
+  # =====================================================
+  # SALES
+  # =====================================================
+  - name: adw_sales
+    database: fea_academy
+    schema: adventure_works
+    description: "Dados transacionais de vendas da Adventure Works"
+    tables:
+
+      - name: sales_salesorderheader
+        description: "Cabeçalho dos pedidos de venda"
+        columns:
+          - name: salesorderid
+            description: "Identificador único do pedido"
+            tests:
+              - not_null
+              - unique
+          - name: customerid
+            description: "Identificador do cliente"
+            tests:
+              - not_null
+          - name: creditcardid
+            description: "Identificador do cartão"
+            tests:
+              - not_null
+          - name: status
+            description: "Status do pedido"
+            tests:
+              - not_null
+          - name: modifieddate
+            description: "Data de modificação do pedido"
+            tests:
+              - not_null
+
+      - name: sales_salesorderdetail
+        description: "Itens dos pedidos de venda"
+        columns:
+          - name: salesorderdetailid
+            description: "Identificador do item do pedido"
+            tests:
+              - not_null
+              - unique
+          - name: salesorderid
+            description: "Identificador do pedido"
+            tests:
+              - not_null
+              - relationships:
+                  to: source('adw', 'sales_salesorderheader')
+                  field: salesorderid
+          - name: productid
+            description: "Identificador do produto"
+            tests:
+              - not_null
+          - name: orderqty
+            description: "Quantidade comprada"
+            tests:
+              - not_null
+
+      - name: sales_creditcard
+        description: "Tipos de cartão utilizados"
+        columns:
+          - name: creditcardid
+            description: "Identificador do cartão"
+            tests:
+              - not_null
+              - unique
+          - name: cardtype
+            description: "Tipo do cartão"
+            tests:
+              - not_null
+
+      - name: sales_salesreason
+        description: "Motivos de venda"
+        columns:
+          - name: salesreasonid
+            description: "Identificador do motivo"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome do motivo"
+            tests:
+              - not_null
+
+      - name: sales_salesorderheadersalesreason
+        description: "Relacionamento pedido x motivo"
+        columns:
+          - name: salesorderid
+            description: "Pedido"
+            tests:
+              - not_null
+          - name: salesreasonid
+            description: "Motivo"
+            tests:
+              - not_null
+
+      - name: sales_customer
+        description: "Clientes da Adventure Works"
+        columns:
+          - name: customerid
+            description: "Identificador do cliente"
+            tests:
+              - not_null
+              - unique
+          - name: personid
+            description: "Pessoa associada ao cliente"
+            tests:
+              - not_null
+              - unique
+
+# =====================================================
+  # PRODUCTION
+  # =====================================================
+  - name: adw_production
+    database: fea_academy
+    schema: adventure_works
+    description: "Dados de produtos"
+
+    tables:
+
+      - name: production_product
+        description: "Cadastro de produtos"
+        columns:
+          - name: productid
+            description: "Identificador do produto"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome do produto"
+            tests:
+              - not_null
+          - name: productsubcategoryid
+            description: "Identificador da subcategoria do produto"
+
+      - name: production_productsubcategory
+        description: "Subcategorias de produto"
+        columns:
+          - name: productsubcategoryid
+            description: "Identificador da subcategoria do produto"
+            tests:
+              - not_null
+              - unique
+          - name: productcategoryid
+            description: "Identificador da categoria do produto"
+            tests:
+              - not_null
+          - name: name
+            description: "Nome da subcategoria"
+            tests:
+              - not_null
+
+      - name: production_productcategory
+        description: "Categorias de produto"
+        columns:
+          - name: productcategoryid
+            description: "Identificador da categoria"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome da categoria"
+            tests:
+              - not_null
+
+# =====================================================
+  # PERSON
+  # =====================================================
+  - name: adw_person
+    database: fea_academy
+    schema: adventure_works
+    description: "Dados de pessoas e localização"
+
+    tables:
+
+      - name: person_person
+        description: "Cadastro de pessoas"
+        columns:
+          - name: businessentityid
+            description: "Identificador da pessoa"
+            tests:
+              - not_null
+              - unique
+          - name: firstname
+            description: "Primeiro nome"
+            tests:
+              - not_null
+          - name: lastname
+            description: "Sobrenome"
+            tests:
+              - not_null
+
+      - name: person_emailaddress
+        description: "Emails das pessoas"
+        columns:
+          - name: emailaddressid
+            description: "Identificador do email das pessoas"
+            tests:
+              - not_null
+              - unique
+          - name: businessentityid
+            description: "Identificador das Pessoas"
+            tests:
+              - not_null
+          - name: emailaddress
+            description: "Email das pessoas"
+            tests:
+              - not_null
+
+      - name: person_personphone
+        description: "Telefones das pessoas"
+        columns:
+          - name: businessentityid
+            description: "Identificador das Pessoas"
+            tests:
+              - not_null
+          - name: phonenumber
+            description: "Número do Telefone"
+            tests:
+              - not_null
+
+      - name: person_address
+        description: "Endereços"
+        columns:
+          - name: addressid
+            description: "Identificador do endereço"
+            tests:
+              - not_null
+              - unique
+          - name: city
+            description: "Cidade"
+            tests:
+              - not_null
+          - name: stateprovinceid
+            description: "Estado"
+            tests:
+              - not_null
+
+      - name: person_stateprovince
+        description: "Estados"
+        columns:
+          - name: stateprovinceid
+            description: "Identificador do estado"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome do estado"
+            tests:
+              - not_null
+          - name: countryregioncode
+            description: "Código do país"
+            tests:
+              - not_null
+
+      - name: person_countryregion
+        description: "Países"
+        columns:
+          - name: countryregioncode
+            description: "Código do país"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome do país"
+            tests:
+              - not_null
