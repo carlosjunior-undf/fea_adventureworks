@@ -1,6 +1,6 @@
 with 
 
-source as (
+source_sales_customer as (
 
     select * from {{ source('adw_sales', 'sales_customer') }}
 
@@ -9,14 +9,11 @@ source as (
 renamed as (
 
     select
-        customerid,
-        personid,
-        storeid,
-        territoryid,
-        rowguid,
-        modifieddate
-
-    from source
+        cast(customerid as int) as customer_pk,
+        cast(personid as float) as person_fk,
+        cast(territoryid as int) as territory_fk,
+        cast(modifieddate as date) as modified_date
+    from source_sales_customer
 
 )
 
