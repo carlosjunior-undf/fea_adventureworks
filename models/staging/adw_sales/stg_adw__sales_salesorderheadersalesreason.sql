@@ -1,6 +1,6 @@
 with 
 
-source as (
+source_sales_salesorderheadersalesreason as (
 
     select * from {{ source('adw_sales', 'sales_salesorderheadersalesreason') }}
 
@@ -9,11 +9,11 @@ source as (
 renamed as (
 
     select
-        salesorderid,
-        salesreasonid,
-        modifieddate
+        cast(salesorderid as int) as salesorder_pk,
+        cast(salesreasonid as int) as salesreason_fk,
+        cast(modifieddate as date) as modified_date
 
-    from source
+    from source_sales_salesorderheadersalesreason
 
 )
 

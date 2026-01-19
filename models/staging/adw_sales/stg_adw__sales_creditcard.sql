@@ -1,22 +1,18 @@
 with 
 
-source as (
+source_sales_creditcard as (
 
     select * from {{ source('adw_sales', 'sales_creditcard') }}
 
 ),
 
 renamed as (
-
     select
-        creditcardid,
-        cardtype,
-        cardnumber,
-        expmonth,
-        expyear,
-        modifieddate
-
-    from source
+        cast(creditcardid as int) as creditcard_pk,
+        cast(cardtype as string) as tipo_cartao,
+        --cardnumber,
+        cast(modifieddate as date) as modified_date
+    from source_sales_creditcard
 
 )
 
