@@ -112,6 +112,27 @@ sources:
               - not_null
               - unique
 
+      - name: sales_territory
+        description: "Território do Cliente"
+        columns:
+          - name: territoryid
+            description: "Identificador do território do cliente"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome do Território do Cliente"
+            tests:
+              - not_null
+          - name: countryregioncode
+            description: "Código da Região do País do Cliente"
+            tests:
+              - not_null
+          - name: group
+            description: "Código do Grupo da Região do Cliente"
+            tests:
+              - not_null
+
 # =====================================================
   # PRODUCTION
   # =====================================================

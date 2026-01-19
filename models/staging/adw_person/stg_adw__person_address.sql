@@ -1,6 +1,6 @@
 with 
 
-source as (
+source_person_address as (
 
     select * from {{ source('adw_person', 'person_address') }}
 
@@ -9,18 +9,16 @@ source as (
 renamed as (
 
     select
-        addressid,
-        addressline1,
-        addressline2,
-        city,
-        stateprovinceid,
-        postalcode,
-        spatiallocation,
-        rowguid,
-        modifieddate
-
-    from source
+        cast(addressid as int) as endereco_pk,
+        cast(addressline1 as string) as endereco_pessoa,
+        --addressline2,
+        cast(city as string) as cidade_pessoa,
+        cast(stateprovinceid as int) as estado_fk,
+        --postalcode,
+        --spatiallocation,
+        --rowguid,
+        cast(modifieddate as date) as modified_date
+    from source_person_address
 
 )
-
 select * from renamed
