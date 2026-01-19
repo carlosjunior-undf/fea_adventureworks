@@ -10,7 +10,7 @@ renamed as (
 
     select
         {{ dbt_utils.generate_surrogate_key(['productid', 'productsubcategoryid']) }} as produto_sk,
-        cast(productid as int) as product_fk,
+        cast(productid as int) as produto_fk,
         cast(productsubcategoryid as int) as subcategoria_fk,
         cast(name as string) as nome_produto,
         cast (listprice as float) as preco_lista,
