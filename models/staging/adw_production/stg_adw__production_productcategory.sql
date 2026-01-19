@@ -12,7 +12,6 @@ renamed as (
         cast(productcategoryid as int) as categoria_pk,
         cast(name as string) as nome_categoria,
         cast(modifieddate as date) as modified_date
-
     from source_production_productcategory
 
 )
