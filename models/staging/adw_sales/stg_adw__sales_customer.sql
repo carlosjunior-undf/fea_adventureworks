@@ -9,9 +9,9 @@ source_sales_customer as (
 renamed as (
 
     select
-        cast(customerid as int) as customer_pk,
-        cast(personid as float) as person_fk,
-        cast(territoryid as int) as territory_fk,
+        cast(customerid as int) as cliente_pk,
+        cast(personid as float) as pessoa_fk,
+        cast(territoryid as int) as territorio_fk,
         cast(modifieddate as date) as modified_date
     from source_sales_customer
 

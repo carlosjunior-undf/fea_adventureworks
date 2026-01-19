@@ -1,6 +1,6 @@
 with 
 
-source as (
+source_person_emailaddress as (
 
     select * from {{ source('adw_person', 'person_emailaddress') }}
 
@@ -9,14 +9,11 @@ source as (
 renamed as (
 
     select
-        businessentityid,
-        emailaddressid,
-        emailaddress,
-        rowguid,
-        modifieddate
-
-    from source
-
+        cast(businessentityid as int) as pessoa_fk,
+        cast(emailaddressid as int) as email_pk,
+        cast(emailaddress as string) as email_pessoa,
+        --rowguid,
+        cast(modifieddate as date) as modified_date
+    from source_person_emailaddress
 )
-
 select * from renamed

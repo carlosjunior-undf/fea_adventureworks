@@ -8,7 +8,7 @@ source_sales_creditcard as (
 
 renamed as (
     select
-        cast(creditcardid as int) as creditcard_pk,
+        cast(creditcardid as int) as cartao_credito_pk,
         cast(cardtype as string) as tipo_cartao,
         --cardnumber,
         cast(modifieddate as date) as modified_date

@@ -1,6 +1,6 @@
 with 
 
-source as (
+source_person_personphone as (
 
     select * from {{ source('adw_person', 'person_personphone') }}
 
@@ -9,13 +9,11 @@ source as (
 renamed as (
 
     select
-        businessentityid,
-        phonenumber,
-        phonenumbertypeid,
-        modifieddate
-
-    from source
+        cast(businessentityid as int) as pessoa_fk,
+        cast(phonenumber as string) as numero_telefone,
+        cast(modifieddate as date) as modified_date
+        --phonenumbertypeid,
+    from source_person_personphone
 
 )
-
 select * from renamed

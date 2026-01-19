@@ -1,6 +1,6 @@
 with 
 
-source as (
+source_person_person as (
 
     select * from {{ source('adw_person', 'person_person') }}
 
@@ -9,21 +9,21 @@ source as (
 renamed as (
 
     select
-        businessentityid,
-        persontype,
-        namestyle,
-        title,
-        firstname,
-        middlename,
-        lastname,
-        suffix,
-        emailpromotion,
-        additionalcontactinfo,
-        demographics,
-        rowguid,
-        modifieddate
-
-    from source
+        cast(businessentityid as int) as pessoa_pk,
+        concat(firstname, ' ', lastname) as nome_cliente,
+        cast(modifieddate as date) as modified_date
+        --persontype,
+        --namestyle,
+        --title,
+        --firstname,
+        --middlename,
+        --lastname,
+        --suffix,
+        --emailpromotion,
+        --additionalcontactinfo,
+        --demographics,
+        --rowguid,
+    from source_person_person
 
 )
 
