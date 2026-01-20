@@ -9,7 +9,7 @@ source_person_person as (
 renamed as (
 
     select
-        cast(businessentityid as int) as pessoa_pk,
+        cast(businessentityid as int) as entidade_empresa_fk,
         concat(firstname, ' ', lastname) as nome_cliente,
         cast(modifieddate as date) as modified_date
         --persontype,

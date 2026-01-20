@@ -15,11 +15,9 @@ renamed as (
         --isonlystateprovinceflag,
         cast(name as string) as nome_regiao,
         cast(territoryid as int) as territorio_fk,
-        rowguid,
-        modifieddate
-
+        --rowguid,
+        cast(modifieddate as date) as modified_date
     from source_person_stateprovince
-
 )
 
 select * from renamed

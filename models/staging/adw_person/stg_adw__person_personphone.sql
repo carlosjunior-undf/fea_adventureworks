@@ -9,7 +9,7 @@ source_person_personphone as (
 renamed as (
 
     select
-        cast(businessentityid as int) as pessoa_fk,
+        cast(businessentityid as int) as entidade_empresa_fk,
         cast(phonenumber as string) as numero_telefone,
         cast(modifieddate as date) as modified_date
         --phonenumbertypeid,
