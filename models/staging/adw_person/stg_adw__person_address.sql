@@ -9,6 +9,7 @@ source_person_address as (
 renamed as (
 
     select
+        {{ dbt_utils.generate_surrogate_key(['addressid']) }} as localidade_sk,
         cast(addressid as int) as endereco_pk,
         cast(addressline1 as string) as endereco_pessoa,
         --addressline2,
