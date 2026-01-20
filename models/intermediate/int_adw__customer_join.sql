@@ -25,18 +25,18 @@ with
         select
             person_businessentity.entidade_empresa_pk,
 
-            person_person.entidade_empresa_fk,
+            --person_person.entidade_empresa_fk,
             person_person.nome_cliente,
 
-            person_personphone.entidade_empresa_fk,
+            --person_personphone.entidade_empresa_fk,
             person_personphone.numero_telefone,
 
             person_address.endereco_pk,
-            --person_address.endereco_pessoa,
-            --person_address.cidade_pessoa,
-            --person_address.estado_fk,
+            person_address.endereco_pessoa,
+            person_address.cidade_pessoa,
+            person_address.estado_fk,
 
-            person_emailaddress.entidade_empresa_fk,
+            --person_emailaddress.entidade_empresa_fk,
             person_emailaddress.email_pessoa
         from person_businessentity
         inner join person_person on person_businessentity.entidade_empresa_pk = person_person.entidade_empresa_fk
