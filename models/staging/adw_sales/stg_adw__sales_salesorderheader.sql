@@ -11,7 +11,7 @@ renamed as (
     select
         {{ dbt_utils.generate_surrogate_key(['salesorderid']) }} as sales_order_sk,
         cast(salesorderid as int) as salesorder_fk ,
-        cast(customerid as int) as customer_fk,
+        cast(customerid as int) as cliente_fk,
         cast(salespersonid as int) as salesperson_fk,
         cast(territoryid as int) as territory_fk,
         cast(creditcardid as int) as creditcard_fk,
