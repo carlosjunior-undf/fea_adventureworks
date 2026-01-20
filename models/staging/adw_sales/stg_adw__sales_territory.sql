@@ -2,7 +2,7 @@ with
 
 source_sales_territory as (
 
-    select * from {{ source('adw_sales', 'sales_territory') }}
+    select * from {{ source('adw_sales', 'sales_salesterritory') }}
 
 ),
 

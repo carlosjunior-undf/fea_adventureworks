@@ -112,7 +112,7 @@ sources:
               - not_null
               - unique
 
-      - name: sales_territory
+      - name: sales_salesterritory
         description: "Território do Cliente"
         columns:
           - name: territoryid
