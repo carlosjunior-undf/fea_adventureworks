@@ -9,7 +9,7 @@ source_sales_customer as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['customerid', 'personid']) }} as cliente_sk,
+        {{ dbt_utils.generate_surrogate_key(['customerid']) }} as cliente_sk,
         cast(customerid as int) as cliente_pk,
         cast(personid as float) as pessoa_pk,
         cast(territoryid as int) as territorio_fk,

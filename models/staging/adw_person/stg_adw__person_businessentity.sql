@@ -10,7 +10,7 @@ renamed as (
 
     select
         cast(businessentityid as int) as entidade_empresa_pk,
-        rowguid,
+        --rowguid,
         cast(modifieddate as date) as modified_date
     from source_person_businessentity
 
