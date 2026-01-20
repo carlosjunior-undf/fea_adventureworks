@@ -1,6 +1,6 @@
 with 
 
-source_sales_territory as (
+source_sales_salesterritory as (
 
     select * from {{ source('adw_sales', 'sales_salesterritory') }}
 
@@ -13,8 +13,13 @@ renamed as (
         cast(name as string) as nome_territorio,
         cast(countryregioncode as string) as codigo_regiao_pais,
         cast(group as string) as grupo_territorio
-    from source_sales_territory
+        --salesytd,
+        --saleslastyear,
+        --costytd,
+        --costlastyear,
+        --rowguid,
+        --cast(modifieddate as data) as modified_date
+    from source_sales_salesterritory
 
 )
-
 select * from renamed
