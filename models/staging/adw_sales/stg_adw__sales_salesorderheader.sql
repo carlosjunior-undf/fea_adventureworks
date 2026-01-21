@@ -9,20 +9,20 @@ source_sales_salesorderheader as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['salesorderid']) }} as sales_order_sk,
-        cast(salesorderid as int) as salesorder_fk ,
+        {{ dbt_utils.generate_surrogate_key(['salesorderid', 'customerid']) }} as pedido_venda_sk,
+        cast(salesorderid as int) as pedido_venda_fk,
         cast(customerid as int) as cliente_fk,
-        cast(salespersonid as int) as salesperson_fk,
-        cast(territoryid as int) as territory_fk,
-        cast(creditcardid as int) as creditcard_fk,
-        cast(orderdate as date) as order_date ,
-        cast(shipdate as date) as ship_date,
+        cast(salespersonid as int) as pessoa_venda_pk,
+        cast(territoryid as int) as territorio_fk,
+        cast(creditcardid as int) as cartao_credito_fk,
+        cast(orderdate as date) as data_pedido,
+        cast(shipdate as date) as data_envio,
+        cast(modifieddate as date) as modified_date,
         status,
         subtotal,
         taxamt,
         freight,
-        (subtotal + taxamt + freight) as faturamento_bruto,
-        cast(modifieddate as date) as modified_date
+        (subtotal + taxamt + freight) as faturamento_bruto
     from source_sales_salesorderheader
 
 )
