@@ -23,9 +23,10 @@ with
     -- transformation
     joined as (
         select
-            person_businessentity.entidade_empresa_pk,
-
+            person_businessentity.entidade_empresa_sk,
+            --person_businessentity.entidade_empresa_pk,
             --person_person.entidade_empresa_fk,
+
             person_person.nome_cliente,
 
             --person_personphone.entidade_empresa_fk,

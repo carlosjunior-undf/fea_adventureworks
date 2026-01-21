@@ -17,8 +17,11 @@ with
         select
             production_product.produto_sk,
             production_product.nome_produto,
+
             production_productsubcategory.categoria_fk,
+
             production_productcategory.nome_categoria,
+            
             production_product.subcategoria_fk,
             production_productsubcategory.nome_subcategoria,
             production_product.preco_lista
