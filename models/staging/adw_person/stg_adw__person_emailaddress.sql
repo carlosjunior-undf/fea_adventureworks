@@ -11,9 +11,9 @@ renamed as (
     select
         cast(businessentityid as int) as entidade_empresa_fk,
         cast(emailaddressid as int) as email_pk,
-        cast(emailaddress as string) as email_pessoa,
+        cast(emailaddress as string) as email_pessoa
         --rowguid,
-        cast(modifieddate as date) as modified_date
+        --cast(modifieddate as date) as modified_date
     from source_person_emailaddress
 )
 select * from renamed

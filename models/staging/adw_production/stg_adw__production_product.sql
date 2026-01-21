@@ -13,8 +13,8 @@ renamed as (
         cast(productid as int) as produto_fk,
         cast(productsubcategoryid as int) as subcategoria_fk,
         cast(name as string) as nome_produto,
-        cast (listprice as float) as preco_lista,
-        cast(modifieddate as date) as modified_date
+        cast (listprice as float) as preco_lista
+        --cast(modifieddate as date) as modified_date
         --productmodelid,
         --sellstartdate,
         --sellenddate,

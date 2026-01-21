@@ -14,11 +14,11 @@ renamed as (
         cast(addressline1 as string) as endereco_pessoa,
         --addressline2,
         cast(city as string) as cidade_pessoa,
-        cast(stateprovinceid as int) as estado_fk,
+        cast(stateprovinceid as int) as estado_fk
         --postalcode,
         --spatiallocation,
         --rowguid,
-        cast(modifieddate as date) as modified_date
+        --cast(modifieddate as date) as modified_date
     from source_person_address
 
 )

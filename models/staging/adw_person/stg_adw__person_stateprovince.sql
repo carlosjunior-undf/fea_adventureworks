@@ -14,10 +14,9 @@ renamed as (
         cast(countryregioncode as string) as codigo_pais_pk,
         --isonlystateprovinceflag,
         cast(name as string) as nome_estado,
-        cast(territoryid as int) as territorio_fk,
+        cast(territoryid as int) as territorio_fk
         --rowguid,
-        cast(modifieddate as date) as modified_date
+        --cast(modifieddate as date) as modified_date
     from source_person_stateprovince
 )
-
 select * from renamed

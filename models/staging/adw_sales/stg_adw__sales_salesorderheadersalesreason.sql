@@ -9,12 +9,10 @@ source_sales_salesorderheadersalesreason as (
 renamed as (
 
     select
-        cast(salesorderid as int) as salesorder_pk,
-        cast(salesreasonid as int) as salesreason_fk,
-        cast(modifieddate as date) as modified_date
-
+        cast(salesorderid as int) as pedido_venda_pk,
+        cast(salesreasonid as int) as motivo_venda_fk
+        --cast(modifieddate as date) as modified_date
     from source_sales_salesorderheadersalesreason
 
 )
-
 select * from renamed

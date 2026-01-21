@@ -10,8 +10,8 @@ renamed as (
 
     select
         cast(businessentityid as int) as entidade_empresa_fk,
-        concat(firstname, ' ', lastname) as nome_cliente,
-        cast(modifieddate as date) as modified_date
+        concat(firstname, ' ', lastname) as nome_cliente
+        --cast(modifieddate as date) as modified_date
         --persontype,
         --namestyle,
         --title,
@@ -24,7 +24,6 @@ renamed as (
         --demographics,
         --rowguid,
     from source_person_person
-
 )
 
 select * from renamed
