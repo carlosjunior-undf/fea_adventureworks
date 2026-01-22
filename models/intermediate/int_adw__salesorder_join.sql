@@ -41,9 +41,9 @@ with
             sales_salesorderdetail.data_completa,
             sales_salesorderdetail.quantidade_comprada,
             sales_salesorderdetail.preco_unitario,
-            sales_salesorderdetail.desconto,
-            sales_salesorderdetail.valor_total_negociado,
             sales_salesorderdetail.desconto_pct,
+            sales_salesorderdetail.valor_total_negociado,
+            sales_salesorderdetail.desconto_total,
 
             sales_customer.cliente_sk,
             sales_customer.cliente_pk,
