@@ -3,7 +3,6 @@
     schema="dim_adw"
 ) }}
 with
-    -- import CTES
     stg_creditcard as (
         select *
         from {{ ref('stg_adw__sales_creditcard') }}

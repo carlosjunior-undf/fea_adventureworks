@@ -3,7 +3,6 @@
     schema="dim_adw"
 ) }}
 with
-    -- import CTES
     int_customer as (
         select *
         from {{ ref('int_adw__customer_join') }}
