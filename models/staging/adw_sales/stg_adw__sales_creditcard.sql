@@ -12,10 +12,9 @@ source_sales_creditcard as (
 
 renamed as (
     select
-        {{ dbt_utils.generate_surrogate_key(['creditcardid']) }} as cartao_credito_sk,
         cast(creditcardid as int) as cartao_credito_pk,
-        cast(cardtype as string) as tipo_cartao
-        --cardnumber,
+        cast(cardtype as string) as tipo_cartao,
+        cast(cardnumber as string) as numero_cartao
         --cast(modifieddate as date) as modified_date
     from source_sales_creditcard
 

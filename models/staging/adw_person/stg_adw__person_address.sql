@@ -13,16 +13,14 @@ source_person_address as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['addressid']) }} as localidade_sk,
         cast(addressid as int) as endereco_pk,
         cast(addressline1 as string) as endereco_pessoa,
-        --addressline2,
+        cast(postalcode as string) as cep_pessoa,
         cast(city as string) as cidade_pessoa,
-        cast(stateprovinceid as int) as estado_fk
-        --postalcode,
+        cast(stateprovinceid as int) as estado_fk,
+        cast(modifieddate as date) as data_completa
         --spatiallocation,
         --rowguid,
-        --cast(modifieddate as date) as modified_date
     from source_person_address
 
 )

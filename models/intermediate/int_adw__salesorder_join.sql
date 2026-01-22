@@ -32,11 +32,11 @@ with
             sales_salesorderheader.taxa,
             sales_salesorderheader.frete,
 
-            sales_salesorderdetail.
-            sales_salesorderdetail.
-            sales_salesorderdetail.
-            sales_salesorderdetail.
-            sales_salesorderdetail.
+            sales_salesorderdetail.pedido_venda_item_sk
+            sales_salesorderdetail.data_completa
+            sales_salesorderdetail.quantidade_comprada
+            sales_salesorderdetail.preco_unitario
+            sales_salesorderdetail.desconto_pct
 
         
         from production_product
