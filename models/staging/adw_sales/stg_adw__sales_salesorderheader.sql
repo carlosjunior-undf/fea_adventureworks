@@ -26,8 +26,8 @@ renamed as (
         cast(status as int) as codigo_status,
         cast(subtotal as float) as sub_total,
         cast(taxamt as float) as taxa,
-        cast(freight as float) as frete,
-        (sub_total + taxa + frete) as faturamento_bruto
+        cast(freight as float) as frete
+--        (sub_total + taxa + frete) as faturamento_bruto
 
     from source_sales_salesorderheader
 

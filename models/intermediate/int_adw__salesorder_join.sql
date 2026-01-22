@@ -32,7 +32,7 @@ with
             sales_salesorderheader.sub_total,
             sales_salesorderheader.taxa,
             sales_salesorderheader.frete,
-            sales_salesorderheader.faturamento_bruto,
+--            sales_salesorderheader.faturamento_bruto,
 
             sales_salesorderdetail.pedido_venda_item_sk,
             sales_salesorderdetail.pedido_venda_fk,
@@ -42,8 +42,9 @@ with
             sales_salesorderdetail.quantidade_comprada,
             sales_salesorderdetail.preco_unitario,
             sales_salesorderdetail.desconto_pct,
-            sales_salesorderdetail.valor_total_negociado,
-            sales_salesorderdetail.desconto_total,
+--            sales_salesorderdetail.valor_total_negociado,
+--            sales_salesorderdetail.desconto_total,
+--            sales_salesorderdetail.teve_desconto,
 
             sales_customer.cliente_sk,
             sales_customer.cliente_pk,
