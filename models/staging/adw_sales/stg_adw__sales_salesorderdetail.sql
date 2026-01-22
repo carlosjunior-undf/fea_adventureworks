@@ -20,9 +20,9 @@ renamed as (
         cast(modifieddate as date) as data_completa,
         cast(orderqty as int) as quantidade_comprada,
         cast(unitprice as float) as preco_unitario,
-        cast(unitpricediscount as float) as desconto_pct,
-        (unitprice * orderqty) as valor_total_negociado,
-        (unitpricediscount * unitprice * orderqty) as desconto
+        cast(unitpricediscount as float) as desconto,
+        (preco_unitario * quantidade_comprada) as valor_total_negociado,
+        (desconto * preco_unitario * quantidade_comprada) as desconto_pct
     from source_sales_salesorderdetail
 
 )
