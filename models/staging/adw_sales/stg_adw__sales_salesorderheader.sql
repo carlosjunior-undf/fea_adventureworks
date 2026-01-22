@@ -14,9 +14,10 @@ renamed as (
 
     select
         
+        {{ dbt_utils.generate_surrogate_key(['customerid', 'territoryid', 'creditcardid', 'salespersonid']) }} as pedido_venda_sk,
         cast(salesorderid as int) as pedido_venda_pk,
-        cast(customerid as int) as cliente_fk,
         cast(salespersonid as int) as pessoa_venda_pk,
+        cast(customerid as int) as cliente_fk,
         cast(territoryid as int) as territorio_fk,
         cast(creditcardid as int) as cartao_credito_fk,
         cast(orderdate as date) as data_pedido,
@@ -26,7 +27,7 @@ renamed as (
         cast(subtotal as float) as sub_total,
         cast(taxamt as float) as taxa,
         cast(freight as float) as frete,
-        (subtotal + taxamt + freight) as faturamento_bruto
+        (sub_total + taxa + frete) as faturamento_bruto
 
     from source_sales_salesorderheader
 
