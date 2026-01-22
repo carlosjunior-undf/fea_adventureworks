@@ -11,10 +11,12 @@ with
     dim_adw_address__metrics as (
         select
             localidade_sk,
+            endereco_pessoa,
             cidade_pessoa,
-            --codigo_estado,
+            cep_pessoa,
+            codigo_estado,
             nome_estado,
-            --codigo_pais,
+            codigo_pais,
             nome_pais
         from int_address
     )

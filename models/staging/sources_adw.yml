@@ -61,17 +61,40 @@ sources:
               - not_null
 
       - name: sales_creditcard
-        description: "Tipos de cartão utilizados"
+        description: "Dados do cartão de crédito"
         columns:
           - name: creditcardid
-            description: "Identificador do cartão"
+            description: "Identificador do cartão de crédito"
             tests:
               - not_null
               - unique
           - name: cardtype
-            description: "Tipo do cartão"
+            description: "Tipo do cartão de crédito"
             tests:
               - not_null
+          - name: cardnumber
+            description: "Número do cartão de crédito"
+            tests:
+              - not_null
+
+
+      - name: sales_personcreditcard
+        description: "Tipos de cartão utilizados pelo cliente para compra"
+        columns:
+          - name: businessentityid
+            description: "Identificador do dono do cartão"
+            tests:
+              - not_null
+          - name: creditcardid
+            description: "Identificador do cartão de crédito"
+            tests:
+              - not_null
+          - name: modifieddate
+            description: "Data de modificação do cartao do cliente"
+            tests:
+              - not_null
+
+
 
       - name: sales_salesreason
         description: "Motivos de venda"
@@ -222,6 +245,18 @@ sources:
             tests:
               - not_null
               - unique
+
+      - name: person_businessentityaddress
+        description: "Endereço vinculado à Entidade Empresa"
+        columns:
+          - name: businessentityid
+            description: "Identificador da Entidade Empresa"
+            tests:
+              - not_null
+          - name: addressid
+            description: "Identificador do endereço"
+            tests:
+              - not_null
 
       - name: person_emailaddress
         description: "Emails das pessoas"

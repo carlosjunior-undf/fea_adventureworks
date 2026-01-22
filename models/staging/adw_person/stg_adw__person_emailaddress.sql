@@ -13,8 +13,8 @@ source_person_emailaddress as (
 renamed as (
 
     select
-        cast(businessentityid as int) as entidade_empresa_fk,
         cast(emailaddressid as int) as email_pk,
+        cast(businessentityid as int) as entidade_empresa_fk,
         cast(emailaddress as string) as email_pessoa
         --rowguid,
         --cast(modifieddate as date) as modified_date

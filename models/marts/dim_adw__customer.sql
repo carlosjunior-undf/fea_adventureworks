@@ -10,12 +10,10 @@ with
     
     dim_adw_customer__metrics as (
         select
-            entidade_empresa_sk,
+            entidade_empresa_fk,
             nome_cliente,
-            endereco_pessoa,
-            numero_telefone,
-            --cidade_pessoa,
-            email_pessoa
+            email_pessoa,
+            numero_telefone
         from int_customer
     )
 select * from dim_adw_customer__metrics

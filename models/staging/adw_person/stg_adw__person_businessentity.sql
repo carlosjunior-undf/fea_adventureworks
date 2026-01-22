@@ -13,10 +13,10 @@ source_person_businessentity as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['businessentityid']) }} as entidade_empresa_sk,
-        cast(businessentityid as int) as entidade_empresa_pk
+        
+        cast(businessentityid as int) as entidade_empresa_pk,
+        cast(modifieddate as date) as modified_date
         --rowguid,
-        --cast(modifieddate as date) as modified_date
     from source_person_businessentity
 
 )

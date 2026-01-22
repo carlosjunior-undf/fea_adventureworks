@@ -5,13 +5,14 @@
 with
     stg_creditcard as (
         select *
-        from {{ ref('stg_adw__sales_creditcard') }}
+        from {{ ref('int_adw__creditcard_join') }}
     ),
     
     dim_adw_creditcard__metrics as (
         select
             cartao_credito_sk,
-            tipo_cartao
+            tipo_cartao,
+            numero_cartao
         from stg_creditcard
     )
 select * from dim_adw_creditcard__metrics
