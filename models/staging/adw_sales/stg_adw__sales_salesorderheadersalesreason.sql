@@ -13,7 +13,8 @@ source_sales_salesorderheadersalesreason as (
 renamed as (
 
     select
-        cast(salesorderid as int) as pedido_venda_pk,
+        {{ dbt_utils.generate_surrogate_key(['salesorderid', 'salesreasonid']) }} as motivo_venda_sk,
+        cast(salesorderid as int) as pedido_venda_fk,
         cast(salesreasonid as int) as motivo_venda_fk,
         cast(modifieddate as date) as data_completa
     from source_sales_salesorderheadersalesreason

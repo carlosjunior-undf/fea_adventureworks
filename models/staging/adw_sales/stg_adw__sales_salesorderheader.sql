@@ -14,7 +14,7 @@ renamed as (
 
     select
         {{ dbt_utils.generate_surrogate_key(['salesorderid', 'customerid']) }} as pedido_venda_sk,
-        cast(salesorderid as int) as pedido_venda_fk,
+        cast(salesorderid as int) as pedido_venda_pk,
         cast(customerid as int) as cliente_fk,
         cast(salespersonid as int) as pessoa_venda_pk,
         cast(territoryid as int) as territorio_fk,

@@ -3,11 +3,8 @@
     schema="stg_adw"
 ) }}
 with 
-
 source_sales_customer as (
-
     select * from {{ source('adw_sales', 'sales_customer') }}
-
 ),
 
 renamed as (

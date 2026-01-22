@@ -3,9 +3,9 @@
     schema="dim_adw"
 ) }}
 with
-    stg_salesreason as (
+    int_salesreason as (
         select *
-        from {{ ref('stg_adw__sales_salesreason') }}
+        from {{ ref('int_adw__reason_join') }}
     ),
     
     dim_adw_salesreason__metrics as (
@@ -13,6 +13,6 @@ with
             motivo_venda_sk,
             nome_motivo,
             tipo_motivo
-        from stg_salesreason
+        from int_salesreason
     )
 select * from dim_adw_salesreason__metrics
