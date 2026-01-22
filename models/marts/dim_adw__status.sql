@@ -1,8 +1,7 @@
-{{ config(
+{{config(
     materialized="view",
     schema="dim_adw"
-) }}
-
+)}}
 with
 
 source_status as (

@@ -17,10 +17,10 @@ renamed as (
         cast(salesorderid as int) as pedido_venda_fk,
         cast(salesorderdetailid as int) as pedido_venda_item_fk,
         cast(productid as int) as produto_fk,
-        --cast(modifieddate as date) as modified_date,
+        cast(modifieddate as date) as data_completa,
         cast(orderqty as int) as quantidade_comprada,
-        unitprice,
-        unitpricediscount,
+        cast(unitprice as float) as preco_unitario,
+        cast(unitpricediscount as float) as desconto_pct,
         (unitprice * orderqty) as valor_total_negociado,
         (unitpricediscount * unitprice * orderqty) as desconto
     from source_sales_salesorderdetail

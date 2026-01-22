@@ -23,9 +23,9 @@ renamed as (
         cast(shipdate as date) as data_envio,
         cast(modifieddate as date) as data_completa,
         cast(status as int) as codigo_status,
-        subtotal,
-        taxamt,
-        freight,
+        cast(subtotal as float) as sub_total,
+        cast(taxamt as float) as taxa,
+        cast(freight as float) as frete,
         (subtotal + taxamt + freight) as faturamento_bruto
 
     from source_sales_salesorderheader

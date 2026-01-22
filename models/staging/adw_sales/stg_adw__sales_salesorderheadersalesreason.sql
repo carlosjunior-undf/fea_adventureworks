@@ -14,8 +14,8 @@ renamed as (
 
     select
         cast(salesorderid as int) as pedido_venda_pk,
-        cast(salesreasonid as int) as motivo_venda_fk
-        --cast(modifieddate as date) as modified_date
+        cast(salesreasonid as int) as motivo_venda_fk,
+        cast(modifieddate as date) as data_completa
     from source_sales_salesorderheadersalesreason
 
 )

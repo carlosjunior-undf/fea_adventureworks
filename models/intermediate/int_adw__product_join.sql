@@ -3,7 +3,6 @@
     schema="int_adw"
 ) }}
 with
-    -- import CTES
     production_product as (
         select *
         from {{ ref('stg_adw__production_product') }}
@@ -16,7 +15,7 @@ with
         select *
         from {{ ref('stg_adw__production_productsubcategory') }}
     ),
-    -- transformation
+
     joined as (
         select
             production_product.produto_sk,
