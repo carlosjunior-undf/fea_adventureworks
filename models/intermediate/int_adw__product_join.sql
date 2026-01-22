@@ -1,3 +1,7 @@
+{{ config(
+    materialized="view",
+    schema="int_adw"
+) }}
 with
     -- import CTES
     production_product as (

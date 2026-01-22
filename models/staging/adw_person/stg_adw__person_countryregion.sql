@@ -1,3 +1,7 @@
+{{ config(
+    materialized="view",
+    schema="stg_adw"
+) }}
 with 
 
 source_person_countryregion as (
@@ -9,7 +13,7 @@ source_person_countryregion as (
 renamed as (
 
     select
-        cast(countryregioncode as string) as codigo_pais_fk,
+        cast(countryregioncode as string) as codigo_pais,
         cast(name as string) as nome_pais
         --cast(modifieddate as date) as modified_date
     from source_person_countryregion

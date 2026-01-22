@@ -1,3 +1,7 @@
+{{ config(
+    materialized="view",
+    schema="int_adw"
+) }}
 with
     -- import CTES
     person_person as (
@@ -37,8 +41,8 @@ with
             person_address.cidade_pessoa,
             person_address.estado_fk,
 
-            --person_emailaddress.entidade_empresa_fk,
             person_emailaddress.email_pessoa
+            --person_emailaddress.entidade_empresa_fk,
         from person_businessentity
         inner join person_person on person_businessentity.entidade_empresa_pk = person_person.entidade_empresa_fk
         inner join person_emailaddress on person_person.entidade_empresa_fk = person_emailaddress.entidade_empresa_fk
