@@ -1,3 +1,7 @@
+{{ config(
+    materialized="view",
+    schema="stg_adw"
+) }}
 with 
 
 source_production_productcategory as (

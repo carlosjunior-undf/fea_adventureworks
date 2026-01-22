@@ -1,3 +1,7 @@
+{{ config(
+    materialized="view",
+    schema="dim_adw"
+) }}
 with
     -- import CTES
     int_products as (

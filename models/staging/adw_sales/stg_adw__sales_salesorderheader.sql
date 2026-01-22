@@ -1,3 +1,7 @@
+{{ config(
+    materialized="view",
+    schema="stg_adw"
+) }}
 with 
 
 source_sales_salesorderheader as (
@@ -17,12 +21,13 @@ renamed as (
         cast(creditcardid as int) as cartao_credito_fk,
         cast(orderdate as date) as data_pedido,
         cast(shipdate as date) as data_envio,
-        cast(modifieddate as date) as modified_date,
-        status,
+        cast(modifieddate as date) as data_completa,
+        cast(status as int) as codigo_status,
         subtotal,
         taxamt,
         freight,
         (subtotal + taxamt + freight) as faturamento_bruto
+
     from source_sales_salesorderheader
 
 )
