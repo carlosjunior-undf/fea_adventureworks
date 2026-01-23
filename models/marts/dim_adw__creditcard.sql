@@ -3,7 +3,7 @@
     schema="dim_adw"
 ) }}
 with
-    stg_creditcard as (
+    int_creditcard as (
         select *
         from {{ ref('int_adw__creditcard_join') }}
     ),
@@ -13,6 +13,6 @@ with
             cartao_credito_sk,
             tipo_cartao,
             numero_cartao
-        from stg_creditcard
+        from int_creditcard
     )
 select * from dim_adw_creditcard__metrics

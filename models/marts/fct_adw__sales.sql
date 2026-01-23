@@ -2,13 +2,44 @@
     materialized="view",
     schema="fct_adw"
 ) }}
+-- import dim dimentions
 with
+    dim_address as (
+        select *
+        from {{ ref('dim_adw__address') }}
+    ),
+        dim_creditcard as (
+        select *
+        from {{ ref('dim_adw__creditcard') }}
+    ),
+        dim_customer as (
+        select *
+        from {{ ref('dim_adw__customer') }}
+    ),
+        dim_date as (
+        select *
+        from {{ ref('dim_adw__date') }}
+    ),
+        dim_product as (
+        select *
+        from {{ ref('dim_adw__product') }}
+    ),
+        dim_salesreason as (
+        select *
+        from {{ ref('dim_adw__salesreason') }}
+    ),
+        dim_status as (
+        select *
+        from {{ ref('dim_adw__status') }}
+    ),
+ 
+-- connecting with fct_sales
     int_salesorder as (
         select *
         from {{ ref('int_adw__salesorder_join') }}
     ),
     
-    fct_adw_int_salesorder__metrics as (
+    salesorder__metrics as (
         select
             pedido_venda_sk,
             pedido_venda_pk,
@@ -53,4 +84,4 @@ with
         
         from int_salesorder
     )
-select * from fct_adw_int_salesorder__metrics
+select * from salesorder__metrics
