@@ -13,7 +13,7 @@ source_sales_salesterritory as (
 renamed as (
 
     select
-        cast(territoryid as int) as territorio_pk,
+        cast(territoryid as int) as territorio_id,
         cast(name as string) as nome_territorio,
         cast(countryregioncode as string) as codigo_pais,
         cast(group as string) as grupo_territorio

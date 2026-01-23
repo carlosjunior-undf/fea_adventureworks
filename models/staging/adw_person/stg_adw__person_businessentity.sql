@@ -14,8 +14,8 @@ renamed as (
 
     select
         
-        cast(businessentityid as int) as entidade_empresa_pk,
-        cast(modifieddate as date) as modified_date
+        cast(businessentityid as int) as entidade_pessoa_id,
+        --cast(modifieddate as date) as modified_date
         --rowguid,
     from source_person_businessentity
 
