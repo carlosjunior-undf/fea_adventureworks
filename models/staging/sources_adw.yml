@@ -174,6 +174,10 @@ sources:
             description: "Nome do produto"
             tests:
               - not_null
+          - name: productnumber
+            description: "Número do produto"
+            tests:
+              - not_null
           - name: color
             description: "Nome do produto"
             tests:
@@ -196,6 +200,18 @@ sources:
               - not_null
           - name: productsubcategoryid
             description: "Identificador da subcategoria do produto"
+            tests:
+              - not_null
+          - name: productmodelid
+            description: "Identificador do modelo do produto"
+            tests:
+              - not_null
+          - name: sellstartdate
+            description: "Data de início da venda do produto"
+            tests:
+              - not_null
+          - name: sellenddate
+            description: "Data de início da venda do produto"
             tests:
               - not_null
 
@@ -302,7 +318,19 @@ sources:
             tests:
               - not_null
 
-
+      - name: production_productmodel
+        description: "Modelo do Produto"
+        columns:
+          - name: productmodelid
+            description: "Identificador do modelo do produto"
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "Nome do modelo do produto"
+            tests:
+              - not_null
+              
 # =====================================================
   # PERSON
   # =====================================================

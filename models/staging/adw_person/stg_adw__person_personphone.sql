@@ -14,7 +14,7 @@ renamed as (
 
     select
         cast(businessentityid as int) as entidade_pessoa_id,
-        cast(phonenumber as string) as numero_telefone
+        cast(phonenumber as string) as telefone_pessoa
         --cast(modifieddate as date) as modified_date
         --phonenumbertypeid,
     from source_person_personphone
