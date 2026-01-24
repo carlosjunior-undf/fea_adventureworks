@@ -13,21 +13,33 @@ source_production_product as (
 renamed as (
 
     select
-        --{{ dbt_utils.generate_surrogate_key(['productid', 'productsubcategoryid']) }} as produto_sk,
+
         cast(productid as int) as produto_id,
+        cast(productmodelid as float) as modelo_produto_id,
         cast(productsubcategoryid as int) as subcategoria_id,
         cast(name as string) as nome_produto,
+        cast(productnumber as string) as numero_produto,
+        cast(color as string ) as cor_produto,
         cast(safetystocklevel as int) as qtd_seguranca_estoque,
         cast(reorderpoint as int) as pto_abastecer_estoque,
         cast(standardcost as float) as custo_padrao,
-        --cast(color as string ) as cor_produto,
-        cast (listprice as float) as preco_lista
-        --productmodelid,
-        --sellstartdate,
-        --sellenddate,
+        cast (listprice as float) as preco_lista,
+        cast(sellstartdate as date) as data_inicio_venda,
+        cast(sellenddate as date) as data_fim_venda
+        --makeflag,
+        --finishedgoodsflag,
+        --size,
+        --sizeunitmeasurecode,
+        --weightunitmeasurecode,
+        --weight,
+        --daystomanufacture,
+        --productline,
+        --class,
+        --style,
         --discontinueddate,
         --rowguid,
-        --cast(modifieddate as date) as modified_date
+        --modifieddate
+
     from source_production_product
 
 )

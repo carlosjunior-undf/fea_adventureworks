@@ -14,8 +14,8 @@ renamed as (
 
     select
         cast(productid as int) as produto_id,
-        cast(startdate as string) as data_inicio,
-        cast(enddate as string) as data_fim,
+        cast(startdate as date) as data_inicio,
+        cast(enddate as date) as data_fim,
         cast(standardcost as float) as custo_padrao
         --modifieddate
 

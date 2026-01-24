@@ -13,10 +13,10 @@ source_sales_salesreason as (
 renamed as (
 
     select
-        cast(salesreasonid as int) as motivo_venda_pk,
+        cast(salesreasonid as int) as motivo_venda_id,
         cast(name as string) as nome_motivo,
-        cast(reasontype as string) as tipo_motivo,
-        cast(modifieddate as date) as data_completa
+        cast(reasontype as string) as tipo_motivo
+        --cast(modifieddate as date) as data_completa
     from source_sales_salesreason
 
 )

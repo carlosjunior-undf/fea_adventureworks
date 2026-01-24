@@ -7,12 +7,25 @@ with
         select * from {{ ref('int_adw__customer_join') }}
     ),
    
-    customer__selected as (
+    customer__metrics as (
         select
-            entidade_empresa_fk,
-            nome_cliente,
+            estado_id,
+            endereco_id,
+            entidade_pessoa_id
+            territorio_id,
+            email_id,
+
+            endereco_pessoa,
+            cep_pessoa,
+            cidade_pessoa,
+            codigo_estado,
+            nome_estado,
             email_pessoa,
-            numero_telefone
+            nome_pessoa,
+            telefone_pessoa,
+            codigo_pais,
+            nome_pais
+
         from int_customer
 
     )

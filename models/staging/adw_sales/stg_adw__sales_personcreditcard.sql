@@ -13,10 +13,9 @@ source_sales_personcreditcard as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['businessentityid', 'creditcardid']) }} as cartao_credito_sk,
-        cast(businessentityid as int) entidade_empresa_fk,
-        cast(creditcardid as int) cartao_credito_fk,
-        cast(modifieddate as date) as data_completa
+        cast(businessentityid as int) entidade_pessoa_id,
+        cast(creditcardid as int) cartao_credito_id,
+        --cast(modifieddate as date) as data_completa
     from source_sales_personcreditcard
 
 )
