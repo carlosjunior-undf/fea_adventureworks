@@ -2,11 +2,9 @@
     materialized="view",
     schema="int_adw"
 ) }}
+
 with
-    person_address as (
-        select *
-        from {{ ref('stg_adw__person_address') }}
-    ),
+
     person_person as (
         select *
         from {{ ref('stg_adw__person_person') }}
@@ -15,10 +13,6 @@ with
         select *
         from {{ ref('stg_adw__person_businessentityaddress') }}
     ), 
-    person_countryregion as (
-        select *
-        from {{ ref('stg_adw__person_countryregion') }}
-    ),
     person_emailaddress as (
         select *
         from {{ ref('stg_adw__person_emailaddress') }}
@@ -27,50 +21,51 @@ with
         select *
         from {{ ref('stg_adw__person_personphone') }}
     ),
-    person_stateprovince as (
+    sales_creditcard as (
         select *
-        from {{ ref('stg_adw__person_stateprovince') }}
+        from {{ ref('stg_adw__sales_creditcard') }}
     ),
+    sales_personcreditcard as (
+        select *
+        from {{ ref('stg_adw__sales_personcreditcard') }}
+    ), 
 
     joined as (
         select
 
-            person_address.estado_id,
-            person_address.endereco_id,
-            person_address.endereco_pessoa,
-            person_address.cep_pessoa,
-            person_address.cidade_pessoa,
+        person_businessentityaddress.cliente_sk
+        ,person_businessentityaddress.entidade_pessoa_fk
+        ,person_businessentityaddress.endereco_fk
+        --person_businessentityaddress.data_completa
 
-            person_businessentityaddress.entidade_pessoa_id,
---            person_businessentityaddress.endereco_id,
+        ,person_person.entidade_pessoa_pk
+        ,person_person.nome_pessoa
+        --person_person.data_completa
 
---            person_stateprovince.estado_id,
-            person_stateprovince.territorio_id,
-            person_stateprovince.codigo_estado,
-            person_stateprovince.nome_estado,
---            person_stateprovince.codigo_pais,
-           
---            person_emailaddress.entidade_pessoa_id,
-            person_emailaddress.email_id,
-            person_emailaddress.email_pessoa,
+        ,person_emailaddress.email_pk
+        ,person_emailaddress.entidade_pessoa_fk
+        ,person_emailaddress.email_pessoa
+        ,person_emailaddress.data_completa
 
---            person_person.entidade_pessoa_id,
-            person_person.nome_pessoa,
+        ,person_personphone.entidade_pessoa_fk
+        ,person_personphone.telefone_pessoa
+        --person_personphone.data_completa
 
---            person_personphone.entidade_pessoa_id,
-            person_personphone.telefone_pessoa,
+        ,sales_creditcard.cartao_credito_pk
+        ,sales_creditcard.tipo_cartao
+        ,sales_creditcard.numero_cartao
+        --sales_creditcard.data_completa
 
-            person_countryregion.codigo_pais,
-            person_countryregion.nome_pais
+        ,sales_personcreditcard.entidade_pessoa_fk
+        ,sales_personcreditcard.cartao_credito_fk
+        --sales_personcreditcard.data_completa
 
-        from person_address
-        inner join person_businessentityaddress on person_address.endereco_id = person_businessentityaddress.endereco_id
-        inner join person_stateprovince on person_address.estado_id = person_stateprovince.estado_id
-        inner join person_emailaddress on person_businessentityaddress.entidade_pessoa_id = person_emailaddress.entidade_pessoa_id
-        inner join person_person on person_businessentityaddress.entidade_pessoa_id = person_person.entidade_pessoa_id
-        inner join person_personphone on person_businessentityaddress.entidade_pessoa_id = person_personphone.entidade_pessoa_id
-        inner join person_countryregion on person_stateprovince.codigo_pais = person_countryregion.codigo_pais
-
+        from person_person
+        inner join person_emailaddress on person_person.entidade_pessoa_pk = person_emailaddress.entidade_pessoa_fk
+        inner join person_businessentityaddress on person_emailaddress.entidade_pessoa_fk = person_businessentityaddress.entidade_pessoa_fk
+        inner join person_personphone on person_businessentityaddress.entidade_pessoa_fk = person_personphone.entidade_pessoa_fk
+        inner join sales_personcreditcard on person_personphone.entidade_pessoa_fk = sales_personcreditcard.entidade_pessoa_fk
+        inner join sales_creditcard on sales_personcreditcard.cartao_credito_fk = sales_creditcard.cartao_credito_pk
 
     )
 select * from joined

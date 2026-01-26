@@ -14,11 +14,11 @@ source_production_location as (
 renamed as (
 
     select
-        cast(locationid as int) as local_producao_id,
-        cast(name as string) as nome_local_producao
+        cast(locationid as int) as local_producao_pk
+        ,cast(name as string) as nome_local_producao
+        ,cast(modifieddate as date) as data_completa
         --costrate,
         --availability,
-        --modifieddate
 
     from source_production_location
 
