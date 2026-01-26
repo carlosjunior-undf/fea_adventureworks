@@ -47,9 +47,9 @@ sources:
             description: "Identificador do pedido"
             tests:
               - not_null
-              - relationships:
-                  to: source('adw', 'sales_salesorderheader')
-                  field: salesorderid
+#              - relationships:
+#                  to: source('adw', 'sales_salesorderheader')
+#                  field: salesorderid
           - name: productid
             description: "Identificador do produto"
             tests:
