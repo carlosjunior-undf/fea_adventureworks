@@ -17,8 +17,8 @@ with
         select
             sales_salesorderdetail.ordem_item_sk
             ,sales_salesorderdetail.pedido_venda_fk
-            ,sales_salesorderdetail.detalhe_pedido_venda_pk
             ,sales_salesorderdetail.produto_fk
+            ,sales_salesorderdetail.detalhe_pedido_venda_pk
             ,sales_salesorderdetail.quantidade_comprada
             ,sales_salesorderdetail.preco_unitario
             ,sales_salesorderdetail.desconto_unitario

@@ -7,16 +7,13 @@ with
         select *
         from {{ ref('int_adw__customer_join') }}
     ),
-    
-    -- Copie e cole todas as colunas da int_adw__customer_join, mas exclua as colunas com as chaves (PK e FK);
+        -- Copie e cole todas as colunas da int_adw__customer_join, mas exclua as colunas com as chaves (PK e FK);
     -- Deixe apenas a chave SK e as demais colunas ativas;
     -- Copie e cole a chave SK na tabela fato.
-
     customer_transformed as (
-        
         select
 
-            cliente_sk
+            (cliente_sk) as cliente_fk
             ,nome_pessoa
             ,email_pessoa
             ,telefone_pessoa

@@ -21,6 +21,15 @@ with
         select *
         from {{ ref('dim_adw__status') }}
     ),
+    dim_address as (
+        select *
+        from {{ ref('dim_adw__adresss') }}
+    ),
+    dim_customer as (
+        select *
+        from {{ ref('dim_adw__customer') }}
+    ),
+
     int_salesorder as (
         select *
         from {{ ref('int_adw__salesorder_join') }}
@@ -30,13 +39,7 @@ with
         select
         -- Chave SK da tabela fato.
             ordem_item_sk
-        -- Chaves FK das dimenções para conecta-las a tabela fato.
---            ,produto_fk
---            ,data_sk as data_fk 
---            ,motivo_venda_fk
---            ,status_fk
---            ,cliente_fk
-
+            
         -- Demais colunas vindo da int_adw__salesorder_join.
             ,data_pedido
             ,data_vencimento
