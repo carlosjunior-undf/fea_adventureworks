@@ -14,18 +14,17 @@ source_sales_salesorderdetail as (
 renamed as (
 
     select
-        cast(salesorderid as int) as pedido_venda_id,
-        cast(salesorderdetailid as int) as detalhe_pedido_venda_id,
-        cast(productid as int) as produto_id,
-        cast(orderqty as int) as quantidade_comprada,
-        cast(unitprice as float) as preco_unitario,
-        cast(unitpricediscount as float) as desconto_unitario,
-        cast(modifieddate as date) as data_completa
+        {{ dbt_utils.generate_surrogate_key(['salesorderid', 'salesorderdetailid', 'productid']) }} as ordem_item_sk
+        ,cast(salesorderid as int) as pedido_venda_fk
+        ,cast(salesorderdetailid as int) as detalhe_pedido_venda_pk
+        ,cast(productid as int) as produto_fk
+        ,cast(orderqty as int) as quantidade_comprada
+        ,cast(unitprice as float) as preco_unitario
+        ,cast(unitpricediscount as float) as desconto_unitario
+        ,cast(modifieddate as date) as data_completa
         --specialofferid
         --carriertrackingnumber
         --rowguid
-        --modifieddate
-
     from source_sales_salesorderdetail
 
 )

@@ -12,9 +12,9 @@ source_production_productcategory as (
 renamed as (
 
     select
-        cast(productcategoryid as int) as categoria_id,
-        cast(name as string) as nome_categoria
-        --cast(modifieddate as date) as modified_date
+        cast(productcategoryid as int) as categoria_pk
+        ,cast(name as string) as nome_categoria
+        ,cast(modifieddate as date) as data_completa
     from source_production_productcategory
 
 )

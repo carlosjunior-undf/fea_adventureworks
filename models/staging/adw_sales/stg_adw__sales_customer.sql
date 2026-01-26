@@ -10,9 +10,9 @@ source_sales_customer as (
 renamed as (
 
     select
-        cast(customerid as int) as cliente_id,
-        cast(personid as float) as pessoa_id,
-        cast(territoryid as int) as territorio_id
+        cast(customerid as int) as cliente_pk
+        ,cast(personid as float) as pessoa_pk
+        ,cast(territoryid as int) as territorio_fk
         --storeid
         --rowguid
         --cast(modifieddate as date) as data_completa

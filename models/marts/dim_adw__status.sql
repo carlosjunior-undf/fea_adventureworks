@@ -33,7 +33,7 @@ status_descriptios as (
     from distinct_status
 ),
 
-surrogate_key as (
+status_trasformed as (
 
     select
         {{ dbt_utils.generate_surrogate_key(['status']) }} as status_sk,
@@ -43,4 +43,4 @@ surrogate_key as (
 
 )
 
-select * from surrogate_key
+select * from status_trasformed

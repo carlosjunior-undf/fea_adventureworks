@@ -13,10 +13,12 @@ source_person_personphone as (
 renamed as (
 
     select
-        cast(businessentityid as int) as entidade_pessoa_id,
-        cast(phonenumber as string) as telefone_pessoa
-        --cast(modifieddate as date) as modified_date
+
+        cast(businessentityid as int) as entidade_pessoa_fk
+        ,cast(phonenumber as string) as telefone_pessoa
+        ,cast(modifieddate as date) as data_completa
         --phonenumbertypeid,
+
     from source_person_personphone
 )
 select * from renamed
