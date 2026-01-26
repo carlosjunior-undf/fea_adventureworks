@@ -4,10 +4,7 @@
 ) }}
 -- import dim dimentions
 with
-    dim_creditcard as (
-        select *
-        from {{ ref('dim_adw__creditcard') }}
-    ),
+
     dim_customer as (
         select *
         from {{ ref('dim_adw__customer') }}

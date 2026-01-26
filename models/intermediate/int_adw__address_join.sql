@@ -7,10 +7,7 @@ with
         select *
         from {{ ref('stg_adw__person_address') }}
     ),
-    person_person as (
-        select *
-        from {{ ref('stg_adw__person_person') }}
-    ),
+
     person_businessentityaddress as (
         select *
         from {{ ref('stg_adw__person_businessentityaddress') }}
@@ -18,14 +15,6 @@ with
     person_countryregion as (
         select *
         from {{ ref('stg_adw__person_countryregion') }}
-    ),
-    person_emailaddress as (
-        select *
-        from {{ ref('stg_adw__person_emailaddress') }}
-    ),
-    person_personphone as (
-        select *
-        from {{ ref('stg_adw__person_personphone') }}
     ),
     person_stateprovince as (
         select *
