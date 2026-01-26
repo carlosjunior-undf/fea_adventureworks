@@ -5,10 +5,6 @@
 -- import dim dimentions
 with
 
-    dim_customer as (
-        select *
-        from {{ ref('dim_adw__customer') }}
-    ),
     dim_date as (
         select *
         from {{ ref('dim_adw__date') }}
@@ -35,9 +31,11 @@ with
         -- Chave SK da tabela fato.
             ordem_item_sk
         -- Chaves FK das dimenções para conecta-las a tabela fato.
-            ,(produto_sk) as produto_fk
-            ,(data_sk) as data_fk 
-            ,(motivo_venda_sk) as motivo_venda_fk
+--            ,produto_fk
+--            ,data_sk as data_fk 
+--            ,motivo_venda_fk
+--            ,status_fk
+--            ,cliente_fk
 
         -- Demais colunas vindo da int_adw__salesorder_join.
             ,data_pedido

@@ -30,6 +30,8 @@ with
         from {{ ref('stg_adw__sales_personcreditcard') }}
     ), 
 
+    -- Após realizar dos joins, copie todas as colunas para a tabela de dimensão correspondente.
+    
     joined as (
         select
 
@@ -43,11 +45,11 @@ with
         --person_person.data_completa
 
         ,person_emailaddress.email_pk
-        ,person_emailaddress.entidade_pessoa_fk
+        --,person_emailaddress.entidade_pessoa_fk
         ,person_emailaddress.email_pessoa
         ,person_emailaddress.data_completa
 
-        ,person_personphone.entidade_pessoa_fk
+        --,person_personphone.entidade_pessoa_fk
         ,person_personphone.telefone_pessoa
         --person_personphone.data_completa
 
@@ -56,7 +58,7 @@ with
         ,sales_creditcard.numero_cartao
         --sales_creditcard.data_completa
 
-        ,sales_personcreditcard.entidade_pessoa_fk
+        --,sales_personcreditcard.entidade_pessoa_fk
         ,sales_personcreditcard.cartao_credito_fk
         --sales_personcreditcard.data_completa
 
