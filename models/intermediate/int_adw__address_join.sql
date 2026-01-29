@@ -24,7 +24,6 @@ with
     joined as (
         select
 
-        person_address.endereco_sk
         ,person_address.endereco_pk
         ,person_address.estado_fk
         ,person_address.endereco_pessoa

@@ -130,6 +130,10 @@ sources:
             tests:
               - not_null
               - unique
+          - name: territoryid
+            description: "Identificador do território do cliente"
+            tests:
+              - not_null
 
       - name: sales_salesterritory
         description: "Território do Cliente"
