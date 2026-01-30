@@ -1,13 +1,24 @@
 {{ config(
-    materialized="view",
+    materialized="table",
     schema="fct_adw"
 ) }}
 -- import dim dimentions
 with
-
-    dim_date as (
+    int_salesorder as (
         select *
-        from {{ ref('dim_adw__date') }}
+        from {{ ref('int_adw__salesorder_join') }}
+    ),
+    dim_customer as (
+        select *
+        from {{ ref('dim_adw__customer') }}
+    ),
+    dim_localition as (
+        select *
+        from {{ ref('dim_adw__location') }}
+    ),
+    dim_creditcard as (
+        select *
+        from {{ ref('dim_adw__creditcard') }}
     ),
     dim_product as (
         select *
@@ -21,31 +32,30 @@ with
         select *
         from {{ ref('dim_adw__status') }}
     ),
-    dim_address as (
+    dim_date as (
         select *
-        from {{ ref('dim_adw__adresss') }}
-    ),
-    dim_customer as (
-        select *
-        from {{ ref('dim_adw__customer') }}
+        from {{ ref('dim_adw__date') }}
     ),
 
-    int_salesorder as (
-        select *
-        from {{ ref('int_adw__salesorder_join') }}
-    ),
-    
     orders__metrics as (
         select
-        -- Chave SK da tabela fato.
+        -- Chaves SK da tabela fato e das dimensões, 
+        -- convertidas como chaves FK para se conectarem à tabela fato.
             ordem_item_sk
+            ,dim_customer.cliente_sk as cliente_fk
+            ,dim_localition.localizacao_sk as territorio_fk
+            ,dim_creditcard.cartao_credito_sk as cartao_credito_fk
+            ,dim_product.produto_sk as produto_fk
+            ,dim_reason.motivo_venda_sk as motivo_venda_fk
+            ,dim_status.status_sk as status_fk
+            ,dim_date.data_sk as data_completa_fk
             
         -- Demais colunas vindo da int_adw__salesorder_join.
             ,data_pedido
             ,data_vencimento
             ,data_envio
-            ,codigo_status
 
+        -- Métricas.
             ,quantidade_comprada
             ,preco_unitario
             ,desconto_unitario
@@ -62,10 +72,13 @@ with
             ,(sub_total + taxa + frete) as faturamento_bruto
             ,total_devido
 
-            ,data_completa
-
-        --Outras tabelas vindas das dimensões e que voce queira que conste ba tabela fato podem ser acrescentadas aqui.
-
         from int_salesorder
+        inner join dim_customer on int_salesorder.cliente_fk = dim_customer.cliente_fk
+        inner join dim_localition on int_salesorder.territorio_fk = dim_localition.territorio_fk
+        inner join dim_creditcard on int_salesorder.cartao_credito_fk = dim_creditcard.cartao_credito_fk
+        inner join dim_product on int_salesorder.produto_fk = dim_product.produto_fk
+        inner join dim_reason on int_salesorder.pedido_venda_fk = dim_reason.pedido_venda_fk
+        inner join dim_status on int_salesorder.codigo_status = dim_status.codigo_status
+        inner join dim_date on int_salesorder.data_completa = dim_date.data_completa
     )
     select * from orders__metrics

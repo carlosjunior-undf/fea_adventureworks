@@ -1,5 +1,5 @@
 {{ config(
-    materialized="view",
+    materialized="table",
     schema="dim_adw"
 ) }}
 with
@@ -13,6 +13,8 @@ with
         select
 
             motivo_venda_sk
+            ,motivo_venda_fk
+            ,pedido_venda_fk
             ,nome_motivo
             ,tipo_motivo
             ,data_completa

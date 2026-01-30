@@ -1,5 +1,5 @@
 {{ config(
-    materialized="view",
+    materialized="table",
     schema="dim_adw"
 ) }}
 with
@@ -12,7 +12,8 @@ with
         select
         -- Traga todas as colunas da int_adw__product_join, mas deixe apenas a SK e as demais colunas ativas.
 
-            (produto_sk) as produto_fk
+            produto_sk
+            ,produto_fk
             ,numero_produto
             ,nome_produto
             ,cor_produto

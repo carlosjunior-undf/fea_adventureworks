@@ -15,7 +15,7 @@ renamed as (
     select
 
         cast(emailaddressid as int) as email_pk
-        ,cast(businessentityid as int) as entidade_pessoa_fk
+        ,cast(businessentityid as int) as cliente_fk
         ,cast(emailaddress as string) as email_pessoa
         ,cast(modifieddate as date) as data_completa
         --rowguid

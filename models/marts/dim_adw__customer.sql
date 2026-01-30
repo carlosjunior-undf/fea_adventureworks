@@ -1,5 +1,5 @@
 {{ config(
-    materialized="view",
+    materialized="table",
     schema="dim_adw"
 ) }}
 with
@@ -13,12 +13,14 @@ with
     customer_transformed as (
         select
 
-            (cliente_sk) as cliente_fk
+            cliente_sk
+            ,cliente_fk
             ,nome_pessoa
-            ,email_pessoa
             ,telefone_pessoa
-            ,numero_cartao
-            ,tipo_cartao
+            ,endereco_pessoa
+            ,cidade_pessoa
+            ,cep_pessoa
+            ,email_pessoa
             ,data_completa
 
         from int_customer

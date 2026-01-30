@@ -1,9 +1,8 @@
 {{ config(
-    materialized="view",
+    materialized="table",
     schema="dim_adw"
 ) }}
 with 
-
 source_dates as (
 
     select

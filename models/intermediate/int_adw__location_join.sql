@@ -4,10 +4,6 @@
 ) }}
 with
 
-    person_address as (
-        select *
-        from {{ ref('stg_adw__person_address') }}
-    ), 
     person_countryregion as (
         select *
         from {{ ref('stg_adw__person_countryregion') }}
@@ -23,14 +19,7 @@ with
 
     joined as (
         select
-
-        ,person_address.endereco_pk
-        ,person_address.estado_fk
-        ,person_address.endereco_pessoa
-        ,person_address.cep_pessoa
-        ,person_address.cidade_pessoa
-        ,person_address.data_completa
-
+        person_stateprovince.localizacao_sk
         ,person_stateprovince.estado_pk
         ,person_stateprovince.territorio_fk
         ,person_stateprovince.codigo_estado
@@ -49,7 +38,6 @@ with
 --        ,sales_salesterritory.data_completa
 
         from person_stateprovince
-        inner join person_address on person_stateprovince.estado_pk = person_address.estado_fk
         inner join sales_salesterritory on person_stateprovince.territorio_fk = sales_salesterritory.territorio_pk
         inner join person_countryregion on person_stateprovince.codigo_pais_fk = person_countryregion.codigo_pais_pk
 
