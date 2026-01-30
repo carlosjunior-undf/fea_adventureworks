@@ -13,8 +13,7 @@ source_person_businessentityaddress as (
 renamed as (
 
     select
-
-        cast(businessentityid as int) as entidade_pessoa_fk
+        cast(businessentityid as int) as cliente_fk
         ,cast(addressid as int) as endereco_fk
         ,cast(modifieddate as date) as data_completa
         --addresstypeid,
