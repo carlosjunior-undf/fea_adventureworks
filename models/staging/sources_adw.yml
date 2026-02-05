@@ -18,16 +18,53 @@ sources:
             tests:
               - not_null
               - unique
+          - name: salespersonid
+            description: "Identificador único da pessoa do pedido"
+            tests:
+              - not_null
+              - unique
           - name: customerid
             description: "Identificador do cliente"
             tests:
               - not_null
+          - name: territoryid
+            description: "Identificador único do território"
+            tests:
+              - not_null
           - name: creditcardid
-            description: "Identificador do cartão"
+            description: "Identificador do cartão de crédito"
+            tests:
+              - not_null
+          - name: orderdate
+            description: "Data do pedido"
+            tests:
+              - not_null
+          - name: duedate
+            description: "Data de vencimento do pedido"
+            tests:
+              - not_null
+          - name: shipdate
+            description: "Data de envio do pedido"
             tests:
               - not_null
           - name: status
             description: "Status do pedido"
+            tests:
+              - not_null
+          - name: subtotal
+            description: "Subtotal do pedido"
+            tests:
+              - not_null
+          - name: taxamt
+            description: "Taxas do pedido pagas pelo cliente"
+            tests:
+              - not_null
+          - name: freight
+            description: "Frete do pedido"
+            tests:
+              - not_null
+          - name: totaldue
+            description: "Total devido pelo cliente"
             tests:
               - not_null
           - name: modifieddate
@@ -47,15 +84,24 @@ sources:
             description: "Identificador do pedido"
             tests:
               - not_null
-#              - relationships:
-#                  to: source('adw', 'sales_salesorderheader')
-#                  field: salesorderid
           - name: productid
             description: "Identificador do produto"
             tests:
               - not_null
           - name: orderqty
-            description: "Quantidade comprada"
+            description: "Quantidade comprada do produto"
+            tests:
+              - not_null
+          - name: unitprice
+            description: "Preço unitário do produto"
+            tests:
+              - not_null
+          - name: uitpricediscount
+            description: "Desconto unitário do produto"
+            tests:
+              - not_null
+          - name: modifieddate
+            description: "Data de modificação do pedido"
             tests:
               - not_null
 
@@ -80,15 +126,11 @@ sources:
         description: "Tipos de cartão utilizados pelo cliente para compra"
         columns:
           - name: businessentityid
-            description: "Identificador do dono do cartão"
+            description: "Identificador do cliente/dono do cartão"
             tests:
               - not_null
           - name: creditcardid
             description: "Identificador do cartão de crédito"
-            tests:
-              - not_null
-          - name: modifieddate
-            description: "Data de modificação do cartao do cliente"
             tests:
               - not_null
 
@@ -104,34 +146,20 @@ sources:
             description: "Nome do motivo"
             tests:
               - not_null
+          - name: reasontype
+            description: "Tipo de motivo"
+            tests:
+              - not_null
 
       - name: sales_salesorderheadersalesreason
         description: "Relacionamento pedido x motivo"
         columns:
           - name: salesorderid
-            description: "Pedido"
+            description: "Identificador do Pedido"
             tests:
               - not_null
           - name: salesreasonid
-            description: "Motivo"
-            tests:
-              - not_null
-
-      - name: sales_customer
-        description: "Clientes da Adventure Works"
-        columns:
-          - name: customerid
-            description: "Identificador do cliente"
-            tests:
-              - not_null
-              - unique
-          - name: personid
-            description: "Pessoa associada ao cliente"
-            tests:
-              - not_null
-              - unique
-          - name: territoryid
-            description: "Identificador do território do cliente"
+            description: "Identificador do Motivo do Pedido"
             tests:
               - not_null
 
@@ -163,7 +191,6 @@ sources:
     database: fea_academy
     schema: adventure_works
     description: "Dados de produtos"
-
     tables:
 
       - name: production_product
@@ -174,6 +201,14 @@ sources:
             tests:
               - not_null
               - unique
+          - name: productsubcategoryid
+            description: "Identificador da subcategoria do produto"
+            tests:
+              - not_null
+          - name: productmodelid
+            description: "Identificador do modelo do produto"
+            tests:
+              - not_null
           - name: name
             description: "Nome do produto"
             tests:
@@ -200,14 +235,6 @@ sources:
               - not_null
           - name: listprice
             description: "Preço de lista do produto"
-            tests:
-              - not_null
-          - name: productsubcategoryid
-            description: "Identificador da subcategoria do produto"
-            tests:
-              - not_null
-          - name: productmodelid
-            description: "Identificador do modelo do produto"
             tests:
               - not_null
           - name: sellstartdate
@@ -240,32 +267,12 @@ sources:
             tests:
               - not_null
               - unique
-          - name: name
-            description: "Nome da subcategoria da produto"
-            tests:
-              - not_null
           - name: productcategoryid
             description: "Identificador da categoria do produto"
             tests:
               - not_null
-
-      - name: production_productcosthistory
-        description: "Histórico de custo do produto"
-        columns:
-          - name: productid
-            description: "Identificador do produto"
-            tests:
-              - not_null
-          - name: startdate
-            description: "Data de inicio do custo do produto"
-            tests:
-              - not_null
-          - name: enddate
-            description: "Data final do custo do produto"
-            tests:
-              - not_null
-          - name: standardcost
-            description: "Custo padrão do produto"
+          - name: name
+            description: "Nome da subcategoria da produto"
             tests:
               - not_null
 
@@ -301,39 +308,6 @@ sources:
             description: "Quantidade de produção do produto"
             tests:
               - not_null
-
-      - name: production_productlistpricehistory
-        description: "Histórico de preços da lista de produtos de produção"
-        columns:
-          - name: productid
-            description: "Identificador do produto"
-            tests:
-              - not_null
-          - name: startdate
-            description: "Data de inicio do preço da lista de produtos de produção"
-            tests:
-              - not_null
-          - name: enddate
-            description: "Data de inicio do preço da lista de produtos de produção"
-            tests:
-              - not_null
-          - name: listprice
-            description: "Preços de lista de produtos de produção"
-            tests:
-              - not_null
-
-      - name: production_productmodel
-        description: "Modelo do Produto"
-        columns:
-          - name: productmodelid
-            description: "Identificador do modelo do produto"
-            tests:
-              - not_null
-              - unique
-          - name: name
-            description: "Nome do modelo do produto"
-            tests:
-              - not_null
               
 # =====================================================
   # PERSON
@@ -342,14 +316,13 @@ sources:
     database: fea_academy
     schema: adventure_works
     description: "Dados de pessoas e localização"
-
     tables:
 
       - name: person_person
         description: "Cadastro de pessoas"
         columns:
           - name: businessentityid
-            description: "Identificador da Entidade/Pessoa"
+            description: "Identificador da Pessoa"
             tests:
               - not_null
               - unique
@@ -362,86 +335,94 @@ sources:
             tests:
               - not_null
 
-      - name: person_businessentity
-        description: "Entidade/Pessoa"
-        columns:
-          - name: businessentityid
-            description: "Identificador da Entidade/Pessoa"
-            tests:
-              - not_null
-
       - name: person_businessentityaddress
-        description: "Endereço vinculado à Entidade Pessoa"
+        description: "Endereço vinculado à Pessoa"
         columns:
           - name: businessentityid
-            description: "Identificador da Entidade Pessoa"
+            description: "Identificador da Pessoa"
             tests:
               - not_null
           - name: addressid
-            description: "Identificador do endereço da entidade/pessoa"
+            description: "Identificador do endereço da pessoa"
             tests:
               - not_null
 
       - name: person_emailaddress
-        description: "Emails das pessoas"
+        description: "Endereço de Email das pessoas"
         columns:
-          - name: businessentityid
-            description: "Identificador das Entidade/Pessoa"
-            tests:
-              - not_null
           - name: emailaddressid
-            description: "Identificador do email da entidade/pessoa"
+            description: "Identificador do email da pessoa"
             tests:
               - not_null
               - unique
+          - name: businessentityid
+            description: "Identificador da Pessoa"
+            tests:
+              - not_null
           - name: emailaddress
-            description: "Email da entidade/pessoa"
+            description: "Email da pessoa"
             tests:
               - not_null
 
       - name: person_personphone
-        description: "Telefones da entidade/pessoa"
+        description: "Telefones da pessoa"
         columns:
           - name: businessentityid
-            description: "Identificador da entidade pessoa"
+            description: "Identificador da pessoa"
             tests:
               - not_null
           - name: phonenumber
-            description: "Número de Telefone da entidade pessoa"
+            description: "Número de Telefone da pessoa"
             tests:
               - not_null
 
       - name: person_address
-        description: "Endereços"
+        description: "Endereço das pessoas"
         columns:
           - name: addressid
-            description: "Identificador do endereço"
+            description: "Identificador do endereço da pessoa"
             tests:
               - not_null
               - unique
-          - name: city
-            description: "Cidade"
+          - name: stateprovinceid
+            description: "Estado da pessoa"
             tests:
               - not_null
-          - name: stateprovinceid
-            description: "Estado"
+          - name: addressline1
+            description: "Local de endereço da pessoa"
+            tests:
+              - not_null
+          - name: city
+            description: "Cidade da pessoa"
+            tests:
+              - not_null
+          - name: postalcode
+            description: "CEP da Cidade da pessoa"
             tests:
               - not_null
 
       - name: person_stateprovince
-        description: "Estados"
+        description: "Estado das Pessoas"
         columns:
           - name: stateprovinceid
-            description: "Identificador do estado"
+            description: "Identificador do estado da pessoa"
             tests:
               - not_null
               - unique
+          - name: terrytoryid
+            description: "Identificador do território da pessoa"
+            tests:
+              - not_null
+          - name: stateprovincecode
+            description: "Código do estado da pessoa"
+            tests:
+              - not_null
           - name: name
-            description: "Nome do estado"
+            description: "Nome do estado da pessoa"
             tests:
               - not_null
           - name: countryregioncode
-            description: "Código do país"
+            description: "Código do país da pessoa"
             tests:
               - not_null
 
@@ -449,11 +430,11 @@ sources:
         description: "Países"
         columns:
           - name: countryregioncode
-            description: "Código do país"
+            description: "Código do país da pessoa"
             tests:
               - not_null
               - unique
           - name: name
-            description: "Nome do país"
+            description: "Nome do país da pessoa"
             tests:
               - not_null
