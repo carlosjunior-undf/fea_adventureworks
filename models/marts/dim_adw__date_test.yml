@@ -1,0 +1,24 @@
+version: 2
+
+models:
+
+# =====================================================
+  # DIM_ADW__DATE
+# =====================================================
+  - name: dim_adw__date
+    description: "Dados da tabela de dimensão de data"
+    columns:
+      - name: data_sk
+        description: "Chave primária surrogada da dimensão de data"
+        tests:
+          - unique
+          - not_null
+      - name: data_completa
+        description: "Chave estrangeira que conecta a tabela de dimensão de data à tabela fato"
+        tests:
+          - dbt_utils.relationships:
+              arguments:
+                to: ref('stg_adw__sales_salesorderheader')
+                field: modifieddate
+
+        

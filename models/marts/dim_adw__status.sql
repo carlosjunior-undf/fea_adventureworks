@@ -4,7 +4,6 @@
 )}}
 
 with
-
 source_status as (
     select
         status

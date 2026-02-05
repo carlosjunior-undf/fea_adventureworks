@@ -1,0 +1,24 @@
+version: 2
+
+models:
+
+# =====================================================
+  # DIM_ADW__STATUS
+# =====================================================
+  - name: dim_adw__status
+    description: "Dados da tabela de dimensão de status"
+    columns:
+      - name: status_sk
+        description: "Chave primária surrogada da dimensão de status"
+        tests:
+          - unique
+          - not_null
+      - name: codigo_status
+        description: "Chave estrangeira que conecta a tabela de dimensão de status à tabela fato"
+        tests:
+          - dbt_utils.relationships:
+              arguments:
+                to: ref('stg_adw__sales_salesorderheader')
+                field: status
+
+        

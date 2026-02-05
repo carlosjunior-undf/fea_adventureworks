@@ -1,0 +1,23 @@
+version: 2
+
+models:
+
+# =====================================================
+  # DIM_ADW__CREDITCARD
+# =====================================================
+  - name: dim_adw__creditcard
+    description: "Dados da tabela de dimensão de cartão de crédito"
+    columns:
+      - name: cartao_credito_sk
+        description: "Chave primária surrogada da dimensão de cartão de crédito"
+        tests:
+          - unique
+          - not_null
+      - name: cartao_credito_fk
+        description: "Chave estrangeira que conecta a tabela de dimensão de cartão de crédito à tabela fato"
+        tests:
+          - dbt_utils.relationships:
+              arguments:
+                to: ref('stg_adw__sales_personcreditcard')
+                field: creditcardid
+        
