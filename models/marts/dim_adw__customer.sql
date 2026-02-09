@@ -14,13 +14,20 @@ with
         select
 
             cliente_sk
-            ,cliente_fk
+            ,cliente_pk
+            ,territorio_pk
             ,nome_pessoa
             ,telefone_pessoa
             ,endereco_pessoa
+            ,email_pessoa
             ,cidade_pessoa
             ,cep_pessoa
-            ,email_pessoa
+            ,codigo_estado
+            ,nome_estado
+            ,nome_pais
+            ,nome_territorio
+            ,codigo_pais
+            ,grupo_territorio
             ,data_completa
 
         from int_customer

@@ -13,10 +13,9 @@ source_sales_salesorderdetail as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['salesorderid', 'salesorderdetailid', 'productid']) }} as ordem_item_sk
-        ,cast(salesorderid as int) as pedido_venda_fk
-        ,cast(salesorderdetailid as int) as detalhe_pedido_venda_pk
+        cast(salesorderid as int) as pedido_venda_fk
         ,cast(productid as int) as produto_fk
+        ,cast(salesorderdetailid as int) as detalhe_pedido_venda_pk
         ,cast(orderqty as int) as quantidade_comprada
         ,cast(unitprice as float) as preco_unitario
         ,cast(unitpricediscount as float) as desconto_unitario

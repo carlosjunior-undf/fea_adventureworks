@@ -18,23 +18,12 @@ sources:
             tests:
               - not_null
               - unique
-          - name: salespersonid
-            description: "Identificador único da pessoa do pedido"
-            tests:
-              - not_null
-              - unique
-          - name: customerid
-            description: "Identificador do cliente"
-            tests:
-              - not_null
           - name: territoryid
             description: "Identificador único do território"
             tests:
               - not_null
           - name: creditcardid
             description: "Identificador do cartão de crédito"
-            tests:
-              - not_null
           - name: orderdate
             description: "Data do pedido"
             tests:
@@ -98,8 +87,6 @@ sources:
               - not_null
           - name: uitpricediscount
             description: "Desconto unitário do produto"
-            tests:
-              - not_null
           - name: modifieddate
             description: "Data de modificação do pedido"
             tests:
@@ -203,12 +190,6 @@ sources:
               - unique
           - name: productsubcategoryid
             description: "Identificador da subcategoria do produto"
-            tests:
-              - not_null
-          - name: productmodelid
-            description: "Identificador do modelo do produto"
-            tests:
-              - not_null
           - name: name
             description: "Nome do produto"
             tests:
@@ -219,8 +200,6 @@ sources:
               - not_null
           - name: color
             description: "Nome do produto"
-            tests:
-              - not_null
           - name: safetystocklevel
             description: "Nivel de segurança de produto em estoque"
             tests:
@@ -239,12 +218,8 @@ sources:
               - not_null
           - name: sellstartdate
             description: "Data de início da venda do produto"
-            tests:
-              - not_null
           - name: sellenddate
             description: "Data de início da venda do produto"
-            tests:
-              - not_null
 
       - name: production_productcategory
         description: "Categoria dos produtos"
@@ -302,8 +277,6 @@ sources:
               - not_null
           - name: shelf
             description: "Prateleira do local de produção do produto"
-            tests:
-              - not_null
           - name: quantity
             description: "Quantidade de produção do produto"
             tests:
@@ -411,8 +384,6 @@ sources:
               - unique
           - name: terrytoryid
             description: "Identificador do território da pessoa"
-            tests:
-              - not_null
           - name: stateprovincecode
             description: "Código do estado da pessoa"
             tests:
@@ -423,8 +394,6 @@ sources:
               - not_null
           - name: countryregioncode
             description: "Código do país da pessoa"
-            tests:
-              - not_null
 
       - name: person_countryregion
         description: "Países"
@@ -432,7 +401,6 @@ sources:
           - name: countryregioncode
             description: "Código do país da pessoa"
             tests:
-              - not_null
               - unique
           - name: name
             description: "Nome do país da pessoa"

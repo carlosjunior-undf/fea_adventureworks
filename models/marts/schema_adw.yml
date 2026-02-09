@@ -1,0 +1,165 @@
+version: 2
+
+models:
+
+# =====================================================
+  # DIM_ADW__CREDITCARD
+# =====================================================
+  - name: dim_adw__creditcard
+    description: "Dimensão de cartão de crédito"
+    columns:
+      - name: cartao_credito_sk
+        description: "Chave surrogada da dimensão de cartão de crédito"
+        tests:
+          - unique
+          - not_null
+      - name: cartao_credito_pk
+        description: "Chave natural do cartão de crédito (origem)"
+        tests:
+          - not_null   
+
+# =====================================================
+  # DIM_ADW__CUSTOMER
+# =====================================================
+  - name: dim_adw__customer
+    description: "Dimensão de clientes"
+    columns:
+      - name: cliente_sk
+        description: "Chave surrogada da dimensão de clientes"
+        tests:
+          - unique
+          - not_null
+      - name: territorio_pk
+        description: "Chave natural de território (origem)"
+        tests:
+          - not_null
+
+# =====================================================
+  # DIM_ADW__DATE
+# =====================================================
+  - name: dim_adw__date
+    description: "Dimensão de datas"
+    columns:
+      - name: data_sk
+        description: "Chave surrogada da dimensão de data no formato YYYY-MM-DD"
+        tests:
+          - unique
+          - not_null
+      - name: data_completa_pk
+        description: "Chave natural de data (origem)"
+        tests:
+          - not_null
+
+# =====================================================
+  # DIM_ADW__PRODUCT
+# =====================================================
+  - name: dim_adw__product
+    description: "Dimensão de produtos"
+    columns:
+      - name: produto_sk
+        description: "Chave surrogada da dimensão de produtos"
+        tests:
+          - not_null
+          - unique
+      - name: produto_pk
+        description: "Chave natural do produto (origem)"
+        tests:
+          - not_null
+
+# =====================================================
+  # DIM_ADW__REASON
+# =====================================================
+  - name: dim_adw__reason
+    description: "Dados da tabela de dimensão de motivo de venda"
+    columns:
+      - name: motivo_venda_sk
+        description: "Chave surrogada da dimensão de motivo de venda"
+        tests:
+          - unique
+          - not_null
+      - name: motivo_venda_pk
+        description: "Chave natural do motivo da venda (origem)"
+        tests:
+          - not_null
+
+# =====================================================
+  # DIM_ADW__STATUS
+# =====================================================
+  - name: dim_adw__status
+    description: "Dimensão de status"
+    columns:
+      - name: status_sk
+        description: "Chave surrogada da dimensão de status"
+        tests:
+          - unique
+          - not_null
+      - name: status_fk
+        description: "Chave estrangeira do status"
+        tests:
+          - not_null
+
+# =====================================================
+  # FCT_ADW__SALES
+# =====================================================
+  - name: fct_adw__sales
+    description: "Tabela fato vendas"
+    columns:
+      - name: ordem_item_sk
+        description: "Chave surrogada da tabela fato"
+        tests:
+          - unique
+          - not_null
+          
+      - name: produto_sk
+        description: "FK para dim_adw__product"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_adw__product')
+                field: produto_sk
+
+      - name: cliente_sk
+        description: "FK para dim_adw__customer"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_adw__customer')
+                field: cliente_sk
+
+      - name: cartao_credito_sk
+        description: "FK para dim_adw__creditcard"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_adw__creditcard')
+                field: cartao_credito_sk
+
+      - name: motivo_venda_sk
+        description: "FK para dim_adw__reason"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_adw__reason')
+                field: motivo_venda_sk
+
+      - name: status_sk
+        description: "FK para dim_adw__status"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_adw__status')
+                field: status_sk
+
+      - name: data_sk
+        description: "FK para dim_adw__date"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_adw__date')
+                field: data_sk

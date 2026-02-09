@@ -10,25 +10,26 @@ with
     
     product_transformed as (
         select
-        -- Traga todas as colunas da int_adw__product_join, mas deixe apenas a SK e as demais colunas ativas.
-
-            produto_sk
-            ,produto_fk
-            ,numero_produto
-            ,nome_produto
-            ,cor_produto
-            ,nome_categoria
-            ,nome_subcategoria
-            ,prateleira_produto
-            ,nome_local_producao
-            ,qtd_produzida
-            ,qtd_seguranca_estoque
-            ,pto_abastecer_estoque
-            ,custo_padrao
-            ,preco_lista
-            ,data_inicio_venda
-            ,data_fim_venda
-            ,data_completa
+        {{ dbt_utils.generate_surrogate_key(['produto_pk']) }} as produto_sk
+        ,produto_pk
+        ,categoria_fk
+        ,subcategoria_fk
+        ,local_producao_fk
+        ,numero_produto
+        ,nome_produto
+        ,cor_produto
+        ,nome_categoria
+        ,nome_subcategoria
+        ,prateleira_produto
+        ,nome_local_producao
+        ,qtd_produzida
+        ,qtd_seguranca_estoque
+        ,pto_abastecer_estoque
+        ,custo_padrao
+        ,preco_lista
+        ,data_inicio_venda
+        ,data_fim_venda
+        ,data_completa
 
         from int_products
     )

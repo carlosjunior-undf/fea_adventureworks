@@ -12,10 +12,6 @@ with
         select *
         from {{ ref('dim_adw__customer') }}
     ),
-    dim_localition as (
-        select *
-        from {{ ref('dim_adw__location') }}
-    ),
     dim_creditcard as (
         select *
         from {{ ref('dim_adw__creditcard') }}
@@ -39,16 +35,16 @@ with
 
     orders__metrics as (
         select
-        -- Chaves SK da tabela fato e das dimensões, 
-        -- convertidas como chaves FK para se conectarem à tabela fato.
-            ordem_item_sk
-            ,dim_customer.cliente_sk as cliente_fk
-            ,dim_localition.localizacao_sk as territorio_fk
-            ,dim_creditcard.cartao_credito_sk as cartao_credito_fk
-            ,dim_product.produto_sk as produto_fk
-            ,dim_reason.motivo_venda_sk as motivo_venda_fk
-            ,dim_status.status_sk as status_fk
-            ,dim_date.data_sk as data_completa_fk
+        {{ dbt_utils.generate_surrogate_key(['pedido_venda_pk']) }} as ordem_item_sk
+        ,pedido_venda_pk
+        ,detalhe_pedido_venda_pk
+
+        ,dim_customer.cliente_sk as cliente_sk
+        ,dim_creditcard.cartao_credito_sk as cartao_credito_sk
+        ,dim_product.produto_sk as produto_sk
+        ,dim_reason.motivo_venda_sk as motivo_venda_sk
+        ,dim_status.status_sk as status_sk
+        ,dim_date.data_sk as data_sk
             
         -- Demais colunas vindo da int_adw__salesorder_join.
             ,data_pedido
@@ -73,12 +69,11 @@ with
             ,total_devido
 
         from int_salesorder
-        inner join dim_customer on int_salesorder.cliente_fk = dim_customer.cliente_fk
-        inner join dim_localition on int_salesorder.territorio_fk = dim_localition.territorio_fk
-        inner join dim_creditcard on int_salesorder.cartao_credito_fk = dim_creditcard.cartao_credito_fk
-        inner join dim_product on int_salesorder.produto_fk = dim_product.produto_fk
-        inner join dim_reason on int_salesorder.pedido_venda_fk = dim_reason.pedido_venda_fk
-        inner join dim_status on int_salesorder.codigo_status = dim_status.codigo_status
-        inner join dim_date on int_salesorder.data_completa = dim_date.data_completa
+        inner join dim_customer on int_salesorder.territorio_fk = dim_customer.territorio_pk
+        inner join dim_creditcard on int_salesorder.cartao_credito_fk = dim_creditcard.cartao_credito_pk
+        inner join dim_product on int_salesorder.produto_fk = dim_product.produto_pk
+        inner join dim_reason on int_salesorder.pedido_venda_pk = dim_reason.pedido_venda_fk
+        inner join dim_status on int_salesorder.status_pk = dim_status.status_fk
+        inner join dim_date on int_salesorder.data_completa_pk = dim_date.data_completa_pk
     )
     select * from orders__metrics

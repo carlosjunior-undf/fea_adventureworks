@@ -13,7 +13,8 @@ source_person_businessentityaddress as (
 renamed as (
 
     select
-        cast(businessentityid as int) as cliente_fk
+        {{ dbt_utils.generate_surrogate_key(['businessentityid', 'addressid']) }} as cliente_sk
+        ,cast(businessentityid as int) as cliente_fk
         ,cast(addressid as int) as endereco_fk
         ,cast(modifieddate as date) as data_completa
         --addresstypeid,

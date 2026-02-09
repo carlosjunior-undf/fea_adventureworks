@@ -40,7 +40,7 @@ status_trasformed as (
     select
 
         {{ dbt_utils.generate_surrogate_key(['status']) }} as status_sk
-        ,cast(status as int) as codigo_status
+        ,cast(status as int) as status_fk
         ,descricao_status
 
     from status_descriptios

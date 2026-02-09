@@ -13,7 +13,7 @@ with
         select
 
             motivo_venda_sk
-            ,motivo_venda_fk
+            ,motivo_venda_pk
             ,pedido_venda_fk
             ,nome_motivo
             ,tipo_motivo

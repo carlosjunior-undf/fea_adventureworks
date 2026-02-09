@@ -13,8 +13,7 @@ source_person_stateprovince as (
 renamed as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['stateprovinceid', 'territoryid']) }} as localizacao_sk
-        ,cast(stateprovinceid as int) as estado_pk
+        cast(stateprovinceid as int) as estado_pk
         ,cast(territoryid as int) as territorio_fk
         ,cast(stateprovincecode as string) as codigo_estado
         ,cast(name as string) as nome_estado
