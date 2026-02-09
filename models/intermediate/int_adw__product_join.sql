@@ -26,9 +26,7 @@ with
 
     joined as (
         select
-        --production_product.modelo_produto_fk
-        production_product.produto_sk
-        ,production_product.produto_pk
+        production_product.produto_pk
         ,production_product.subcategoria_fk
         ,production_product.nome_produto
         ,production_product.numero_produto

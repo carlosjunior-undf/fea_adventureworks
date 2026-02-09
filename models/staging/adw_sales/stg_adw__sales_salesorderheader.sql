@@ -15,19 +15,18 @@ renamed as (
     select
     
         cast(salesorderid as int) as pedido_venda_pk
-        ,cast(salespersonid as int) as pessoa_venda_pk
         ,cast(customerid as int) as cliente_fk
         ,cast(territoryid as int) as territorio_fk
         ,cast(creditcardid as int) as cartao_credito_fk
         ,cast(orderdate as date) as data_pedido
         ,cast(duedate as date) as data_vencimento
         ,cast(shipdate as date) as data_envio
-        ,cast(status as int) as codigo_status
+        ,cast(status as int) as status_pk
         ,cast(subtotal as float) as sub_total
         ,cast(taxamt as float) as taxa
         ,cast(freight as float) as frete
         ,cast(totaldue as float) as total_devido
-        ,cast(modifieddate as date) as data_completa
+        ,cast(modifieddate as date) as data_completa_pk
         --revisionnumber
         --onlineorderflag
         --purchaseordernumber

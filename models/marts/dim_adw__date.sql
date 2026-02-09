@@ -2,6 +2,7 @@
     materialized="table",
     schema="dim_adw"
 ) }}
+
 with 
 source_dates as (
 
@@ -47,7 +48,7 @@ date_trasformed as (
     select
 
         {{ dbt_utils.generate_surrogate_key(['data_completa']) }} as data_sk
-        ,data_completa
+        ,(data_completa) as data_completa_pk
         ,dia
         ,mes
         ,ano

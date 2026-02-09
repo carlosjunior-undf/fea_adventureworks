@@ -14,7 +14,8 @@ with
         select
 
             cartao_credito_sk
-            ,cartao_credito_fk
+            ,cartao_credito_pk
+            ,cliente_fk
             ,tipo_cartao
             ,numero_cartao
             ,data_completa
