@@ -55,3 +55,6 @@ models:
         +schema: dim_adw
       ftc_adw:
         +schema: fct_adw
+    
+vars:
+  'dbt_date:time_zone': 'America/São Paulo'

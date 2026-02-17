@@ -13,22 +13,22 @@ source_person_person as (
 renamed as (
 
     select
-        cast(businessentityid as int) as cliente_pk
-        ,concat(firstname, ' ', lastname) as nome_pessoa
-        ,cast(modifieddate as date) as data_completa
-        --firstname,
-        --middlename,
-        --persontype,
-        --namestyle,
-        --title,
-        --lastname,
-        --suffix,
-        --emailpromotion,
-        --additionalcontactinfo,
-        --demographics,
-        --rowguid,
-        
+        businessentityid
+        ,persontype
+        ,namestyle
+        ,title
+        ,firstname
+        ,middlename
+        ,lastname
+        ,suffix
+        ,emailpromotion
+        ,additionalcontactinfo
+        ,demographics
+        ,rowguid
+        ,modifieddate
+
     from source_person_person
+
 )
 
 select * from renamed

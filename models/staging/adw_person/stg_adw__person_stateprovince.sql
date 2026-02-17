@@ -13,15 +13,17 @@ source_person_stateprovince as (
 renamed as (
 
     select
-        cast(stateprovinceid as int) as estado_pk
-        ,cast(territoryid as int) as territorio_fk
-        ,cast(stateprovincecode as string) as codigo_estado
-        ,cast(name as string) as nome_estado
-        ,cast(countryregioncode as string) as codigo_pais_fk
-        ,cast(modifieddate as date) as data_completa
-        --isonlystateprovinceflag,
-        --rowguid,
+        stateprovinceid
+        ,stateprovincecode
+        ,countryregioncode
+        ,isonlystateprovinceflag
+        ,name
+        ,territoryid
+        ,rowguid
+        ,modifieddate
 
     from source_person_stateprovince
+
 )
+
 select * from renamed

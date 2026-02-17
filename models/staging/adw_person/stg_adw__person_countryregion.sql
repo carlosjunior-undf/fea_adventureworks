@@ -13,11 +13,12 @@ source_person_countryregion as (
 renamed as (
 
     select
+        countryregioncode
+        ,name
+        ,modifieddate
 
-        cast(countryregioncode as string) as codigo_pais_pk
-        ,cast(name as string) as nome_pais
-        ,cast(modifieddate as date) as data_completa
-        
     from source_person_countryregion
+
 )
+
 select * from renamed
