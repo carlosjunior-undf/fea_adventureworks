@@ -13,12 +13,14 @@ source_production_productsubcategory as (
 renamed as (
 
     select
+        productsubcategoryid
+        ,productcategoryid
+        ,name
+        ,rowguid
+        ,modifieddate
 
-        cast(productsubcategoryid as int) as subcategoria_pk
-        ,cast(productcategoryid as int) as categoria_fk
-        ,cast(name as string) as nome_subcategoria
-        ,cast(modifieddate as date) as data_completa
-        
     from source_production_productsubcategory
+
 )
+
 select * from renamed

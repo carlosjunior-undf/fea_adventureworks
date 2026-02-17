@@ -2,63 +2,26 @@
     materialized="table",
     schema="dim_adw"
 ) }}
-
 with 
-source_dates as (
-
-    select
-        cast(modifieddate as date) as data_completa
-    from {{ source('adw_sales', 'sales_salesorderheader') }}
-
-),
-
-distinct_dates as (
+dates as (
 
     select distinct
-
-        data_completa
-
-    from source_dates
-    where data_completa is not null
+        orderdate as data
+    from {{ source('adw_sales','sales_salesorderheader') }}
 
 ),
 
-calendar_attributes as (
+final as (
 
     select
-
-        data_completa
-        ,day(data_completa) as dia
-        ,month(data_completa) as mes
-        ,monthname(data_completa) as nome_mes
-        ,year(data_completa) as ano
-        ,weekofyear(data_completa) as semana_do_ano
-        ,date_format(data_completa, 'EEEE') as nome_dia
-        ,quarter(data_completa) as trimestre
-        ,case 
-            when dayofweek(data_completa) in (1, 7) then TRUE 
-            else FALSE 
-        end as final_de_semana
-    from distinct_dates
-
-),
-
-date_trasformed as (
-
-    select
-
-        {{ dbt_utils.generate_surrogate_key(['data_completa']) }} as data_sk
-        ,(data_completa) as data_completa_pk
-        ,dia
-        ,mes
-        ,ano
-        ,nome_dia
-        ,final_de_semana
-        ,nome_mes
-        ,trimestre
-        ,semana_do_ano
-
-    from calendar_attributes
-
+        {{ dbt_utils.generate_surrogate_key(['data']) }} as data_sk
+        ,data as data_pk
+        ,year(data) as ano
+        ,month(data) as mes
+        ,date_format(data, 'MMMM') as nome_mes
+        ,day(data) as dia
+        ,concat(year(data), '-', lpad(month(data),2,'0')) as ano_mes
+from dates
 )
-select *from date_trasformed
+
+select * from final

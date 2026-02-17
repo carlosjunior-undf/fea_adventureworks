@@ -5,20 +5,15 @@
 with
     int_creditcard as (
         select *
-        from {{ ref('int_adw__creditcard_join') }}
+        from {{ ref('stg_adw__sales_creditcard') }}
     ),
-        -- Copie e cole todas as colunas da int_adw__customer_join, mas exclua as colunas com as chaves (PK e FK);
-    -- Deixe apenas a chave SK e as demais colunas ativas;
-    -- Copie e cole a chave SK na tabela fato.
+
     creditcard_transformed as (
         select
 
-            cartao_credito_sk
-            ,cartao_credito_pk
-            ,cliente_fk
-            ,tipo_cartao
-            ,numero_cartao
-            ,data_completa
+            {{ dbt_utils.generate_surrogate_key(['creditcardid']) }} as cartao_credito_sk
+            ,creditcardid as cartao_credito_pk
+            ,cardtype as tipo_cartao
 
         from int_creditcard
     )

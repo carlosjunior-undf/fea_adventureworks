@@ -1,7 +1,7 @@
 version: 2
 
 models:
-
+          
 # =====================================================
   # DIM_ADW__CREDITCARD
 # =====================================================
@@ -16,7 +16,8 @@ models:
       - name: cartao_credito_pk
         description: "Chave natural do cartão de crédito (origem)"
         tests:
-          - not_null   
+          - unique
+          - not_null
 
 # =====================================================
   # DIM_ADW__CUSTOMER
@@ -29,9 +30,10 @@ models:
         tests:
           - unique
           - not_null
-      - name: territorio_pk
+      - name: cliente_pk
         description: "Chave natural de território (origem)"
         tests:
+          - unique
           - not_null
 
 # =====================================================
@@ -45,9 +47,10 @@ models:
         tests:
           - unique
           - not_null
-      - name: data_completa_pk
+      - name: data_pk
         description: "Chave natural de data (origem)"
         tests:
+          - unique
           - not_null
 
 # =====================================================
@@ -59,27 +62,12 @@ models:
       - name: produto_sk
         description: "Chave surrogada da dimensão de produtos"
         tests:
-          - not_null
           - unique
+          - not_null
       - name: produto_pk
         description: "Chave natural do produto (origem)"
         tests:
-          - not_null
-
-# =====================================================
-  # DIM_ADW__REASON
-# =====================================================
-  - name: dim_adw__reason
-    description: "Dados da tabela de dimensão de motivo de venda"
-    columns:
-      - name: motivo_venda_sk
-        description: "Chave surrogada da dimensão de motivo de venda"
-        tests:
           - unique
-          - not_null
-      - name: motivo_venda_pk
-        description: "Chave natural do motivo da venda (origem)"
-        tests:
           - not_null
 
 # =====================================================
@@ -93,10 +81,29 @@ models:
         tests:
           - unique
           - not_null
-      - name: status_fk
+      - name: status_pk
         description: "Chave estrangeira do status"
         tests:
+          - unique
           - not_null
+
+# =====================================================
+  # DIM_ADW__SALESREASON
+# =====================================================
+  - name: dim_adw__salesreason
+    description: "Dimensão de Motivo de Venda"
+    columns:
+      - name: motivo_venda_sk
+        description: "Chave surrogada da dimensão de Motivo de Venda"
+        tests:
+          - unique
+          - not_null
+      - name: motivo_venda_pk
+        description: "Chave estrangeira de Motivo de Venda"
+        tests:
+          - unique
+          - not_null
+
 
 # =====================================================
   # FCT_ADW__SALES
@@ -104,62 +111,18 @@ models:
   - name: fct_adw__sales
     description: "Tabela fato vendas"
     columns:
-      - name: ordem_item_sk
+      - name: sales_sk
         description: "Chave surrogada da tabela fato"
         tests:
           - unique
           - not_null
-          
-      - name: produto_sk
-        description: "FK para dim_adw__product"
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_adw__product')
-                field: produto_sk
 
-      - name: cliente_sk
-        description: "FK para dim_adw__customer"
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_adw__customer')
-                field: cliente_sk
-
-      - name: cartao_credito_sk
-        description: "FK para dim_adw__creditcard"
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_adw__creditcard')
-                field: cartao_credito_sk
-
-      - name: motivo_venda_sk
-        description: "FK para dim_adw__reason"
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_adw__reason')
-                field: motivo_venda_sk
-
-      - name: status_sk
-        description: "FK para dim_adw__status"
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_adw__status')
-                field: status_sk
-
-      - name: data_sk
-        description: "FK para dim_adw__date"
-        tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_adw__date')
-                field: data_sk
+# =====================================================
+  # TESTE_PEDIDO_CEO
+# =====================================================
+  - name: audit_adw__sales_2011
+    description: "Teste de Faturamento bruto em 2011, solicitado pelo CEO"
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "faturamento_2011 = 12646112.16"

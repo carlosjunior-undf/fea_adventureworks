@@ -4,21 +4,23 @@
 ) }}
 with 
 
-source_production_productcategory as (
+source_sales_store as (
 
-    select * from {{ source('adw_production', 'production_productcategory') }}
+    select * from {{ source('adw_sales', 'sales_store') }}
 
 ),
 
 renamed as (
 
     select
-        productcategoryid
+        businessentityid
         ,name
+        ,salespersonid
+        ,demographics
         ,rowguid
         ,modifieddate
 
-    from source_production_productcategory
+    from source_sales_store
 
 )
 
