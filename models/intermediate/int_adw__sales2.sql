@@ -1,14 +1,21 @@
+-- int_adw__sales.sql
+-- Camada intermediate: monta o grain da fato em nível de detalhe de pedido (salesorderdetail).
+--
+-- Responsabilidades deste modelo:
+--   1. JOIN entre order_detail (grain) e order_header (contexto do pedido)
+--   2. Cálculo das métricas de receita na linha de detalhe
+--   3. Resolução do motivo de venda primário por pedido (menor salesreasonid)
+--      → usado como FK simples na fct_adw__sales (primary_salesreason_sk)
+--      → para análise completa por motivo, use bridge_adw__salesreason
+--
+-- Campos do order_header que pertencem à dimensão de pedido (dim_adw__order)
+-- são mantidos aqui para que a fct_adw__sales possa fazer o JOIN com dim_adw__order.
+-- Não há duplicidade: dim_adw__order é gerada direto do staging, independentemente.
+--
 {{ config(
     materialized="view",
     schema="int_adw"
 ) }}
--- int_adw__sales.sql
--- Camada intermediate: monta o grain da fato em nível de detalhe de pedido (salesorderdetail).
--- A relação N:N entre pedido e motivo de venda é resolvida aqui:
---   - agrega os motivos em um campo de lista (para fins analíticos)
---   - e mantém o salesreasonid "primário" (menor id) para permitir FK simples na fato.
--- Se quiser análise completa por motivo, use a bridge table bridge_adw__salesreason
--- que também é gerada neste projeto.
 
 with order_header as (
 
@@ -29,12 +36,12 @@ order_reason as (
 ),
 
 -- agrega motivos por pedido: pega o menor salesreasonid como "primário"
+-- para uso na FK simples primary_salesreason_sk da fct_adw__sales
 reason_per_order as (
 
     select
         salesorderid
         ,min(salesreasonid) as primary_salesreasonid
-        ,collect_list(salesreason_name) as salesreason_list
 
     from order_reason
     group by salesorderid
@@ -44,40 +51,45 @@ reason_per_order as (
 joined as (
 
     select
+        -- chaves do grain da fato
         order_detail.salesorderid
         ,order_detail.salesorderdetailid
 
+        -- campos do cabeçalho do pedido
+        -- (mantidos para JOINs com dim_adw__order, dim_date, dim_status, etc. na fato)
         ,order_header.orderdate
         ,order_header.duedate
         ,order_header.shipdate
         ,order_header.status
         ,order_header.customerid
-        ,order_header.salespersonid
-        ,order_header.territoryid
-        ,order_header.billtoaddressid
-        ,order_header.shiptoaddressid
         ,order_header.creditcardid
 
+        -- campos da linha de detalhe
         ,order_detail.productid
-        ,order_detail.specialofferid
         ,order_detail.orderqty
         ,order_detail.unitprice
         ,order_detail.unitpricediscount
-        ,round(order_detail.orderqty * order_detail.unitprice, 2) as gross_revenue
-        ,round(order_detail.orderqty * order_detail.unitprice * order_detail.unitpricediscount, 2) as discount_amount
-        ,round(order_detail.orderqty * order_detail.unitprice * (1 - order_detail.unitpricediscount), 2) as net_revenue
 
-        ,order_header.subtotal
+        -- métricas calculadas na linha de detalhe
+        ,round(order_detail.orderqty * order_detail.unitprice, 2)
+            as gross_revenue
+        ,round(order_detail.orderqty * order_detail.unitprice * order_detail.unitpricediscount, 2)
+            as discount_amount
+        ,round(order_detail.orderqty * order_detail.unitprice * (1 - order_detail.unitpricediscount), 2)
+            as net_revenue
+
+        -- campos financeiros do cabeçalho (nível de pedido — para referência)
         ,order_header.taxamt
         ,order_header.freight
-        ,order_header.totaldue
 
+        -- motivo de venda primário: -1 quando o pedido não possui motivo cadastrado
         ,coalesce(reason_per_order.primary_salesreasonid, -1) as primary_salesreasonid
-        -- -1 = pedido sem motivo cadastrado
 
     from order_detail
-    inner join order_header on order_detail.salesorderid = order_header.salesorderid
-    left join  reason_per_order on order_detail.salesorderid = reason_per_order.salesorderid
+    inner join order_header
+        on order_detail.salesorderid = order_header.salesorderid
+    left join reason_per_order
+        on order_detail.salesorderid = reason_per_order.salesorderid
 
 )
 
