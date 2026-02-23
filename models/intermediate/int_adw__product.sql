@@ -27,16 +27,18 @@ category as (
 joined as (
 
     select
-        p.productid
-        ,p.name               as product_name
-        ,p.color
-        ,p.listprice
-        ,sc.name              as subcategory_name
-        ,c.name               as category_name
+        product.productid
+        ,product.name         as product_name
+        ,product.color
+        ,product.listprice
 
-    from product              p
-    left join subcategory     sc on p.productsubcategoryid  = sc.productsubcategoryid
-    left join category        c  on sc.productcategoryid    = c.productcategoryid
+        ,subcategory.name     as subcategory_name
+
+        ,category.name        as category_name
+
+    from product              
+    left join subcategory     on product.productsubcategoryid     = subcategory.productsubcategoryid
+    left join category        on subcategory.productcategoryid    = category.productcategoryid
 
 )
 
