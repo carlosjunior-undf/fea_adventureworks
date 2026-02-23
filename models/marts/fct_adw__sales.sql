@@ -6,14 +6,14 @@
 -- Análise por motivo de venda: usar bridge_adw__salesreason via dim_adw__order.
 --
 -- ─── Relacionamentos no Power BI ──────────────────────────────────────────────
---   fct_adw__sales (N) ──── order_sk      ──(1) dim_adw__order      [Único]
---   fct_adw__sales (N) ──── customer_sk   ──(1) dim_adw__customer   [Único]
---   fct_adw__sales (N) ──── product_sk    ──(1) dim_adw__product    [Único]
---   fct_adw__sales (N) ──── creditcard_sk ──(1) dim_adw__creditcard [Único]
---   fct_adw__sales (N) ──── status_sk     ──(1) dim_adw__status     [Único]
---   fct_adw__sales (N) ──── order_date_sk ──(1) dim_adw__date       [Único]
---   dim_adw__order (1) ──── order_sk      ──(N) bridge              [AMBOS]
---   bridge         (N) ──── salesreason_sk──(1) dim_adw__salesreason[Único]
+--   fct_adw__sales (N) ──── order_sk      ──(1) dim_adw__order        [Único]
+--   fct_adw__sales (N) ──── customer_sk   ──(1) dim_adw__customer     [Único]
+--   fct_adw__sales (N) ──── product_sk    ──(1) dim_adw__product      [Único]
+--   fct_adw__sales (N) ──── creditcard_sk ──(1) dim_adw__creditcard   [Único]
+--   fct_adw__sales (N) ──── status_sk     ──(1) dim_adw__status       [Único]
+--   fct_adw__sales (N) ──── order_date_sk ──(1) dim_adw__date         [Único]
+--   dim_adw__order (1) ──── order_sk      ──(N) bridge                [AMBOS]
+--   bridge         (N) ──── salesreason_sk──(1) dim_adw__salesreason  [Único]
 -- ──────────────────────────────────────────────────────────────────────────────
 
 {{ config(
@@ -103,15 +103,15 @@ final as (
     inner join dim_date
         on cast(int_sales.orderdate as date) = dim_date.full_date
     left  join dim_order
-        on int_sales.salesorderid  = dim_order.salesorderid
+        on int_sales.salesorderid            = dim_order.salesorderid
     left  join dim_customer
-        on int_sales.customerid    = dim_customer.customerid
+        on int_sales.customerid              = dim_customer.customerid
     left  join dim_product
-        on int_sales.productid     = dim_product.productid
+        on int_sales.productid               = dim_product.productid
     left  join dim_creditcard
-        on int_sales.creditcardid  = dim_creditcard.creditcardid
+        on int_sales.creditcardid            = dim_creditcard.creditcardid
     left  join dim_status
-        on int_sales.status        = dim_status.statusid
+        on int_sales.status                  = dim_status.statusid
 
 )
 

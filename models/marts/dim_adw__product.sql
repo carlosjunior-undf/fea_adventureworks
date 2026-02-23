@@ -1,7 +1,6 @@
 -- dim_adw__product.sql
 -- Dimensão de produtos.
 -- Granularidade: um registro por productid.
-
 {{ config(
     materialized = "table",
     schema       = "marts_adw"
@@ -19,7 +18,6 @@ final as (
         {{ dbt_utils.generate_surrogate_key(['productid']) }}   as product_sk
         ,productid
         ,product_name
-        ,color
         ,listprice
         ,subcategory_name
         ,category_name
