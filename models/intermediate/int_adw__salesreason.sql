@@ -21,13 +21,14 @@ order_reason as (
 joined as (
 
     select
-        orr.salesorderid
-        ,sr.salesreasonid
-        ,sr.name        as salesreason_name
-        ,sr.reasontype
+        order_reason.salesorderid
 
-    from order_reason       orr
-    inner join salesreason  sr on orr.salesreasonid = sr.salesreasonid
+        ,salesreason.salesreasonid
+        ,salesreason.name            as salesreason_name
+        ,salesreason.reasontype
+
+    from order_reason       
+    inner join salesreason  on order_reason.salesreasonid = salesreason.salesreasonid
 
 )
 
