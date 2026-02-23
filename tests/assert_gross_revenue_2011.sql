@@ -8,7 +8,7 @@ with actual as (
     select
         sum(gross_revenue) as total_gross_revenue_2011
 
-    from {{ ref('fct_adw__sales2') }}
+    from {{ ref('fct_adw__sales') }}
 
     where year(orderdate) = 2011
 

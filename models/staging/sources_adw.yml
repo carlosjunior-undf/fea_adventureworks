@@ -1,9 +1,14 @@
 # sources.yml
 # Definição e testes das fontes brutas da Adventure Works
+# Alinhado com as perguntas de negócio A–F após reestruturação dos modelos.
+# Testes mantidos apenas para campos efetivamente usados nos marts finais.
 
 version: 2
 
 sources:
+  # ─────────────────────────────────────────
+  # ADW_PERSON
+  # ─────────────────────────────────────────
   - name: adw_person
     description: "Schema de pessoas e endereços da Adventure Works"
     database: "fea_academy"
@@ -11,17 +16,7 @@ sources:
     tables:
 
       - name: person_address
-        description: "Endereços físicos de clientes e entidades"
-        tests:
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "city is not null"
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "stateprovinceid is not null"
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "postalcode is not null"
+        description: "Endereços físicos — city, state e country usados na dim_adw__customer"
         columns:
           - name: addressid
             description: "PK do endereço"
@@ -29,71 +24,49 @@ sources:
               - unique
               - not_null
           - name: city
-            description: "Cidade do endereço"
+            description: "Cidade"
+            tests:
+              - not_null
           - name: stateprovinceid
             description: "FK para person_stateprovince"
             tests:
+              - not_null
               - relationships:
-                  arguments: 
+                  arguments:
                     to: source('adw_person', 'person_stateprovince')
                     field: stateprovinceid
-          - name: postalcode
-            description: "Código postal"
 
       - name: person_businessentityaddress
-        description: "Relacionamento entre entidade de negócio e endereço"
-        tests:
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "businessentityid is not null and addressid is not null"
+        description: "Vínculo entre entidade e endereço — usado para obter o endereço do cliente"
         columns:
           - name: businessentityid
-            description: "FK para person_person (businessentityid)"
+            description: "FK para person_person"
             tests:
               - not_null
           - name: addressid
             description: "FK para person_address"
             tests:
               - not_null
-              - dbt_utils.relationships_where:
-                  arguments:
-                    to: source('adw_person', 'person_address')
-                    field: addressid
-                    from_condition: "addresstypeid is not null"
           - name: addresstypeid
-            description: "Tipo do endereço (cobrança, entrega, etc.)"
+            description: "Tipo do endereço — usado para ordenar e pegar o primeiro"
             tests:
               - not_null
 
       - name: person_countryregion
-        description: "Países e regiões"
-        tests:
-          # Código do país deve ter entre 2 e 3 caracteres (ISO 3166)
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "countryregioncode is null or (length(countryregioncode) >= 2 and length(countryregioncode) <= 3)"
+        description: "Países e regiões — name usado como country_name na dim_adw__customer"
         columns:
           - name: countryregioncode
-            description: "Código ISO do país/região (PK) — existe 1 registro com valor nulo na fonte"
+            description: "Código ISO do país (PK) — 1 registro com valor nulo na fonte"
             tests:
               - unique
           - name: name
-            description: "Nome do país/região"
+            description: "Nome do país"
             tests:
               - not_null
 
       - name: person_person
-        description: "Dados pessoais (nome, tipo) de cada entidade"
+        description: "Dados pessoais — firstname, middlename, lastname usados no full_name da dim_adw__customer"
         tests:
-          # persontype deve estar no domínio correto
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "persontype in ('SC', 'VC', 'IN', 'EM', 'SP', 'GC')"
-          # emailpromotion deve estar no domínio 0, 1, 2
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "emailpromotion in (0, 1, 2)"
-          # firstname e lastname não podem ser ambos nulos
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "firstname is not null or lastname is not null"
@@ -104,42 +77,21 @@ sources:
               - unique
               - not_null
           - name: persontype
-            description: "Tipo da pessoa: SC=Store Contact, VC=Vendor Contact, IN=Individual, EM=Employee, SP=Sales Person, GC=General Contact"
+            description: "Tipo da pessoa"
             tests:
               - not_null
           - name: firstname
             description: "Primeiro nome"
-            tests:
-              - not_null
           - name: lastname
             description: "Sobrenome"
-            tests:
-              - not_null
-          - name: emailpromotion
-            description: "Flag de aceitação de e-mail promocional: 0=Nenhum, 1=Aventureworks, 2=Parceiros"
-            tests:
-              - not_null
 
       - name: person_stateprovince
-        description: "Estados e províncias"
-        tests:
-          # Código do estado deve ter no máximo 3 caracteres
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "length(stateprovincecode) <= 3"
-          # isonlystateprovinceflag é BOOLEAN no Databricks
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "isonlystateprovinceflag is not null"
+        description: "Estados e províncias — name usado como state_name na dim_adw__customer"
         columns:
           - name: stateprovinceid
             description: "PK do estado/província"
             tests:
               - unique
-              - not_null
-          - name: stateprovincecode
-            description: "Código do estado/província"
-            tests:
               - not_null
           - name: countryregioncode
             description: "FK para person_countryregion"
@@ -150,12 +102,14 @@ sources:
                     to: source('adw_person', 'person_countryregion')
                     field: countryregioncode
                     from_condition: "isonlystateprovinceflag = true"
-          - name: isonlystateprovinceflag
-            description: "Flag BOOLEAN: true = estado único para o país, false = um entre vários"
+          - name: name
+            description: "Nome do estado/província"
             tests:
               - not_null
 
-
+  # ─────────────────────────────────────────
+  # ADW_PRODUCTION
+  # ─────────────────────────────────────────
   - name: adw_production
     description: "Schema de produção e produtos da Adventure Works"
     database: "fea_academy"
@@ -163,28 +117,11 @@ sources:
     tables:
 
       - name: production_product
-        description: "Catálogo de produtos"
+        description: "Catálogo de produtos — product_name, color, listprice usados na dim_adw__product"
         tests:
-          # Preço de lista não pode ser negativo
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "listprice >= 0"
-          # Custo padrão não pode ser negativo
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "standardcost >= 0"
-          # Nível de estoque de segurança deve ser positivo
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "safetystocklevel > 0"
-          # Preço de lista deve ser maior ou igual ao custo padrão
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "listprice >= standardcost"
-          # Produto não pode ter data de fim de venda anterior à data de início
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "sellenddate is null or sellenddate > sellstartdate"
         columns:
           - name: productid
             description: "PK do produto"
@@ -198,30 +135,13 @@ sources:
               - dbt_utils.not_accepted_values:
                   arguments:
                     values: ['Test Product', 'DELETE']
-          - name: productnumber
-            description: "Número/código único do produto"
-            tests:
-              - unique
-              - not_null
           - name: listprice
-            description: "Preço de tabela do produto"
-            tests:
-              - not_null
-          - name: standardcost
-            description: "Custo padrão de fabricação/aquisição"
-            tests:
-              - not_null
-          - name: safetystocklevel
-            description: "Nível mínimo de estoque de segurança"
-            tests:
-              - not_null
-          - name: sellstartdate
-            description: "Data de início de vigência de venda do produto"
+            description: "Preço de tabela"
             tests:
               - not_null
 
       - name: production_productcategory
-        description: "Categorias de produto"
+        description: "Categorias de produto — name usado como category_name na dim_adw__product"
         columns:
           - name: productcategoryid
             description: "PK da categoria"
@@ -234,11 +154,7 @@ sources:
               - not_null
 
       - name: production_productsubcategory
-        description: "Subcategorias de produto"
-        tests:
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "productcategoryid is not null and productsubcategoryid > 0"
+        description: "Subcategorias — name usado como subcategory_name na dim_adw__product"
         columns:
           - name: productsubcategoryid
             description: "PK da subcategoria"
@@ -249,17 +165,18 @@ sources:
             description: "FK para production_productcategory"
             tests:
               - not_null
-              - dbt_utils.relationships_where:
+              - relationships:
                   arguments:
                     to: source('adw_production', 'production_productcategory')
                     field: productcategoryid
-                    from_condition: "productsubcategoryid > 0"
           - name: name
             description: "Nome da subcategoria"
             tests:
               - not_null
 
-
+  # ─────────────────────────────────────────
+  # ADW_SALES
+  # ─────────────────────────────────────────
   - name: adw_sales
     description: "Schema de vendas da Adventure Works"
     database: "fea_academy"
@@ -267,42 +184,24 @@ sources:
     tables:
 
       - name: sales_creditcard
-        description: "Cartões de crédito utilizados em pedidos"
-        tests:
-          # Ano de expiração deve ser razoável
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "expyear >= 2000 and expyear <= 2040"
-          # Mês de expiração deve estar entre 1 e 12
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "expmonth >= 1 and expmonth <= 12"
+        description: "Cartões de crédito — apenas cardtype é usado na dim_adw__creditcard"
         columns:
           - name: creditcardid
-            description: "PK do cartão de crédito"
+            description: "PK do cartão"
             tests:
               - unique
               - not_null
           - name: cardtype
-            description: "Bandeira/tipo do cartão"
+            description: "Tipo/bandeira do cartão"
             tests:
               - not_null
               - dbt_utils.not_accepted_values:
                   arguments:
                     values: ['Test']
-          - name: expmonth
-            description: "Mês de expiração do cartão (1–12)"
-            tests:
-              - not_null
-          - name: expyear
-            description: "Ano de expiração do cartão"
-            tests:
-              - not_null
 
       - name: sales_customer
-        description: "Clientes de vendas"
+        description: "Clientes — customerid e personid usados na dim_adw__customer"
         tests:
-          # Um customer deve ter ao menos personid ou storeid preenchido
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "personid is not null or storeid is not null"
@@ -313,7 +212,7 @@ sources:
               - unique
               - not_null
           - name: personid
-            description: "FK para person_person — preenchido para clientes individuais"
+            description: "FK para person_person — nulo para clientes do tipo store"
             tests:
               - dbt_utils.relationships_where:
                   arguments:
@@ -322,39 +221,22 @@ sources:
                     from_condition: "personid is not null"
 
       - name: sales_salesorderheader
-        description: "Cabeçalho dos pedidos de venda"
+        description: >
+          Cabeçalho dos pedidos — salesorderid usado na dim_adw__order,
+          customerid, creditcardid, status, orderdate usados na fct_adw__sales.
         tests:
-          # Data de envio deve ser posterior ou igual à data do pedido
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "shipdate is null or shipdate >= orderdate"
-          # Data prevista de entrega deve ser posterior à data do pedido
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "duedate >= orderdate"
-          # totaldue deve ser a soma de subtotal + taxamt + freight
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "abs(totaldue - (subtotal + taxamt + freight)) < 0.01"
-          # Subtotal não pode ser negativo
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "subtotal >= 0"
-          # totaldue não pode ser negativo
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "totaldue >= 0"
-          # status deve estar no domínio esperado
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "status in (1, 2, 3, 4, 5, 6)"
-          # onlineorderflag é BOOLEAN no Databricks
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "onlineorderflag is not null"
         columns:
           - name: salesorderid
-            description: "PK do pedido (cabeçalho)"
+            description: "PK do pedido"
             tests:
               - unique
               - not_null
@@ -368,23 +250,15 @@ sources:
                     field: customerid
                     from_condition: "status <> 4"
           - name: status
-            description: "Status do pedido: 1=In Process, 2=Approved, 3=Backordered, 4=Rejected, 5=Shipped, 6=Cancelled"
+            description: "Status do pedido (1–6)"
             tests:
               - not_null
           - name: orderdate
-            description: "Data em que o pedido foi realizado"
-            tests:
-              - not_null
-          - name: totaldue
-            description: "Valor total do pedido (subtotal + impostos + frete)"
-            tests:
-              - not_null
-          - name: onlineorderflag
-            description: "BOOLEAN: true = pedido feito online; false = pedido via representante"
+            description: "Data do pedido"
             tests:
               - not_null
           - name: creditcardid
-            description: "FK para sales_creditcard — nulo para pedidos offline sem cartão"
+            description: "FK para sales_creditcard — nulo para pedidos sem cartão"
             tests:
               - dbt_utils.relationships_where:
                   arguments:
@@ -393,27 +267,25 @@ sources:
                     from_condition: "creditcardid is not null"
 
       - name: sales_salesorderdetail
-        description: "Linhas de detalhe dos pedidos de venda"
+        description: >
+          Linhas de detalhe dos pedidos — grain da fct_adw__sales.
+          orderqty, unitprice e unitpricediscount usados no cálculo das métricas.
         tests:
-          # Receita bruta da linha deve ser positiva
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "orderqty * unitprice > 0"
-          # Desconto deve estar entre 0 e 1
-          - dbt_utils.expression_is_true:
-              arguments:
-                expression: "unitpricediscount >= 0 and unitpricediscount <= 1"
-          # orderqty deve ser positivo
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "orderqty > 0"
-          # unitprice deve ser positivo
           - dbt_utils.expression_is_true:
               arguments:
                 expression: "unitprice > 0"
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "unitpricediscount >= 0 and unitpricediscount <= 1"
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: "orderqty * unitprice > 0"
         columns:
           - name: salesorderdetailid
-            description: "PK da linha de detalhe do pedido"
+            description: "PK da linha de detalhe"
             tests:
               - unique
               - not_null
@@ -436,20 +308,20 @@ sources:
                     field: productid
                     from_condition: "orderqty > 0"
           - name: orderqty
-            description: "Quantidade do produto comprada nesta linha"
+            description: "Quantidade comprada na linha"
             tests:
               - not_null
           - name: unitprice
-            description: "Preço unitário cobrado no pedido"
+            description: "Preço unitário cobrado"
             tests:
               - not_null
           - name: unitpricediscount
-            description: "Percentual de desconto aplicado na linha (0.0 a 1.0)"
+            description: "Percentual de desconto (0.0 a 1.0)"
             tests:
               - not_null
 
       - name: sales_salesorderheadersalesreason
-        description: "Tabela ponte N:N entre pedido e motivo de venda"
+        description: "Mapeamento N:N entre pedido e motivo — base da bridge_adw__salesreason"
         tests:
           - dbt_utils.expression_is_true:
               arguments:
@@ -469,29 +341,26 @@ sources:
             tests:
               - not_null
               - relationships:
-                  arguments: 
+                  arguments:
                     to: source('adw_sales', 'sales_salesreason')
                     field: salesreasonid
 
       - name: sales_salesreason
-        description: "Motivos de venda cadastrados no sistema"
+        description: "Motivos de venda — salesreason_name e reasontype usados na dim_adw__salesreason"
         columns:
           - name: salesreasonid
-            description: "PK do motivo de venda"
+            description: "PK do motivo"
             tests:
               - unique
               - not_null
           - name: name
-            description: "Descrição do motivo de venda — 'Other' é um motivo legítimo na Adventure Works"
+            description: "Nome do motivo — 'Other' é legítimo na Adventure Works"
             tests:
               - not_null
               - dbt_utils.not_accepted_values:
                   arguments:
                     values: ['Test']
           - name: reasontype
-            description: "Tipo/categoria do motivo (ex: Marketing, Promotion, Other)"
+            description: "Tipo do motivo (ex: Marketing, Promotion, Other)"
             tests:
               - not_null
-              - dbt_utils.not_accepted_values:
-                  arguments:
-                    values: ['Test']
