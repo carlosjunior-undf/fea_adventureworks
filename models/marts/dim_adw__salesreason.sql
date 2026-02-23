@@ -19,7 +19,7 @@ final as (
     select
         {{ dbt_utils.generate_surrogate_key(['salesreasonid']) }} as salesreason_sk
         ,salesreasonid
-        ,name as salesreason_name
+        ,(name) as salesreason_name
         ,reasontype
 
     from source

@@ -10,7 +10,9 @@ models:
   # ═══════════════════════════════════════════════════════════
   # DIMENSÕES
   # ═══════════════════════════════════════════════════════════
-
+    # ---------------------------------------------------------
+      # DIM_ADW__CUSTOMER
+    # ---------------------------------------------------------
   - name: dim_adw__customer
     description: >
       Dimensão de clientes. Granularidade: um registro por customerid.
@@ -43,7 +45,9 @@ models:
       - name: country_name
         description: "Nome do país. Nulo para clientes do tipo store."
 
-
+    # ---------------------------------------------------------
+      # DIM_ADW__PRODUCT
+    # ---------------------------------------------------------
   - name: dim_adw__product
     description: >
       Dimensão de produtos. Granularidade: um registro por productid.
@@ -82,7 +86,9 @@ models:
       - name: category_name
         description: "Nome da categoria. Nulo para produtos sem subcategoria."
 
-
+    # ---------------------------------------------------------
+      # DIM_ADW__CREDITCARD
+    # ---------------------------------------------------------
   - name: dim_adw__creditcard
     description: >
       Dimensão de cartões de crédito. Granularidade: um registro por creditcardid.
@@ -107,7 +113,9 @@ models:
               arguments:
                 values: ['Test']
 
-
+    # ---------------------------------------------------------
+      # DIM_ADW__SALESREASON
+    # ---------------------------------------------------------
   - name: dim_adw__salesreason
     description: >
       Dimensão de motivos de venda. Granularidade: um registro por salesreasonid.
@@ -138,7 +146,9 @@ models:
         tests:
           - not_null
 
-
+    # ---------------------------------------------------------
+      # DIM_ADW__STATUS
+    # ---------------------------------------------------------
   - name: dim_adw__status
     description: >
       Dimensão estática de status dos pedidos (não depende de staging).
@@ -178,7 +188,9 @@ models:
         tests:
           - not_null
 
-
+    # ---------------------------------------------------------
+      # DIM_ADW__DATE
+    # ---------------------------------------------------------
   - name: dim_adw__date
     description: >
       Dimensão calendário gerada via dbt_utils.date_spine (2000-01-01 a 2030-12-31).
@@ -232,12 +244,10 @@ models:
           Eixo X dos gráficos de série temporal — ordena corretamente de forma alfanumérica.
         tests:
           - not_null
-      - name: year_quarter
-        description: "Período trimestral no formato 'Qn yyyy' (ex: Q1 2011)."
-        tests:
-          - not_null
 
-
+    # ---------------------------------------------------------
+      # DIM_ADW__ORDER
+    # ---------------------------------------------------------
   - name: dim_adw__order
     description: >
       Dimensão técnica de pedidos. Granularidade: um registro por salesorderid.
@@ -264,7 +274,9 @@ models:
   # ═══════════════════════════════════════════════════════════
   # BRIDGE
   # ═══════════════════════════════════════════════════════════
-
+    # ---------------------------------------------------------
+      # BRIDGE_ADW__SALESREASON
+    # ---------------------------------------------------------
   - name: bridge_adw__salesreason
     description: >
       Bridge table que resolve a relação N:N entre pedido e motivo de venda.
@@ -304,7 +316,9 @@ models:
   # ═══════════════════════════════════════════════════════════
   # FATO
   # ═══════════════════════════════════════════════════════════
-
+    # ---------------------------------------------------------
+      # FCT_ADW__SALES
+    # ---------------------------------------------------------
   - name: fct_adw__sales
     description: >
       Tabela fato central de vendas. Granularidade: uma linha por salesorderdetailid.
