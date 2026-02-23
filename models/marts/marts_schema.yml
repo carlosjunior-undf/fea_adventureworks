@@ -1,0 +1,397 @@
+# marts_schema.yml
+# Documentação e testes dos marts — Adventure Works Analytics
+# Revisão final: alinhado com todos os modelos após enxugamento completo.
+# Testes expression_is_true referenciam APENAS colunas existentes em cada tabela.
+
+version: 2
+
+models:
+
+  # ═══════════════════════════════════════════════════════════
+  # DIMENSÕES
+  # ═══════════════════════════════════════════════════════════
+
+  - name: dim_adw__customer
+    description: >
+      Dimensão de clientes. Granularidade: um registro por customerid.
+      Clientes do tipo "store" (sem person vinculado) podem ter full_name,
+      city, state_name e country_name nulos — comportamento esperado e documentado.
+      Responde às perguntas: A (cliente), C (top 10 clientes), D (cidade/estado/país).
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "full_name is null or length(trim(full_name)) > 0"
+    columns:
+      - name: customer_sk
+        description: "Surrogate key gerada via hash de customerid."
+        tests:
+          - unique
+          - not_null
+      - name: customerid
+        description: "Chave natural do cliente."
+        tests:
+          - unique
+          - not_null
+      - name: full_name
+        description: >
+          Nome completo: firstname + lastname (concatenados).
+          Nulo para clientes do tipo store (sem person_person vinculado).
+      - name: city
+        description: "Cidade do endereço principal. Nula para clientes do tipo store."
+      - name: state_name
+        description: "Nome do estado/província. Nulo para clientes do tipo store."
+      - name: country_name
+        description: "Nome do país. Nulo para clientes do tipo store."
+
+
+  - name: dim_adw__product
+    description: >
+      Dimensão de produtos. Granularidade: um registro por productid.
+      Hierarquia: produto → subcategoria → categoria.
+      Responde às perguntas: A (produto), B (ticket médio por produto), F (Promotion).
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "listprice >= 0"
+    columns:
+      - name: product_sk
+        description: "Surrogate key gerada via hash de productid."
+        tests:
+          - unique
+          - not_null
+      - name: productid
+        description: "Chave natural do produto."
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Nome do produto."
+        tests:
+          - not_null
+          - dbt_utils.not_accepted_values:
+              arguments:
+                values: ['Test Product', 'DELETE']
+      - name: color
+        description: "Cor do produto. Pode ser nulo para produtos sem cor definida."
+      - name: listprice
+        description: "Preço de tabela do produto."
+        tests:
+          - not_null
+      - name: subcategory_name
+        description: "Nome da subcategoria. Nulo para produtos sem subcategoria."
+      - name: category_name
+        description: "Nome da categoria. Nulo para produtos sem subcategoria."
+
+
+  - name: dim_adw__creditcard
+    description: >
+      Dimensão de cartões de crédito. Granularidade: um registro por creditcardid.
+      Contém apenas o tipo do cartão — único atributo necessário para as perguntas A e C.
+      Dados sensíveis (número, validade) foram intencionalmente omitidos.
+    columns:
+      - name: creditcard_sk
+        description: "Surrogate key gerada via hash de creditcardid."
+        tests:
+          - unique
+          - not_null
+      - name: creditcardid
+        description: "Chave natural do cartão."
+        tests:
+          - unique
+          - not_null
+      - name: cardtype
+        description: "Tipo/bandeira do cartão (ex: Visa, MasterCard, SuperiorCard)."
+        tests:
+          - not_null
+          - dbt_utils.not_accepted_values:
+              arguments:
+                values: ['Test']
+
+
+  - name: dim_adw__salesreason
+    description: >
+      Dimensão de motivos de venda. Granularidade: um registro por salesreasonid.
+      Relação N:N com pedidos resolvida via bridge_adw__salesreason + dim_adw__order.
+      Responde às perguntas: A (motivo), C/D (filtro), F (produto campeão em Promotion).
+    columns:
+      - name: salesreason_sk
+        description: "Surrogate key gerada via hash de salesreasonid."
+        tests:
+          - unique
+          - not_null
+      - name: salesreasonid
+        description: "Chave natural do motivo de venda."
+        tests:
+          - unique
+          - not_null
+      - name: salesreason_name
+        description: >
+          Nome do motivo de venda.
+          'Other' é motivo legítimo na Adventure Works — não deve ser barrado.
+        tests:
+          - not_null
+          - dbt_utils.not_accepted_values:
+              arguments:
+                values: ['Test']
+      - name: reasontype
+        description: "Tipo do motivo (ex: Marketing, Promotion, Other)."
+        tests:
+          - not_null
+
+
+  - name: dim_adw__status
+    description: >
+      Dimensão estática de status dos pedidos (não depende de staging).
+      Domínio fixo: 1=In Process, 2=Approved, 3=Backordered (Open);
+                    4=Rejected, 5=Shipped, 6=Cancelled (Closed).
+      Responde às perguntas: A (status), C/D (filtro por status).
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "statusid in (1, 2, 3, 4, 5, 6)"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "status_group in ('Open', 'Closed')"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "status_group <> 'Open'   or statusid in (1, 2, 3)"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "status_group <> 'Closed' or statusid in (4, 5, 6)"
+    columns:
+      - name: status_sk
+        description: "Surrogate key gerada via hash de statusid."
+        tests:
+          - unique
+          - not_null
+      - name: statusid
+        description: "Identificador numérico do status (1–6)."
+        tests:
+          - unique
+          - not_null
+      - name: status_name
+        description: "Descrição legível do status (ex: Shipped, Cancelled)."
+        tests:
+          - not_null
+      - name: status_group
+        description: "Open = pedidos em andamento (1–3) | Closed = finalizados (4–6)."
+        tests:
+          - not_null
+
+
+  - name: dim_adw__date
+    description: >
+      Dimensão calendário gerada via dbt_utils.date_spine (2000-01-01 a 2030-12-31).
+      Granularidade: um registro por dia.
+      Contém apenas campos necessários para análise temporal (perguntas A, B, E).
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "year >= 2000 and year <= 2030"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "month_number >= 1 and month_number <= 12"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "quarter >= 1 and quarter <= 4"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "length(year_month) = 7"
+    columns:
+      - name: date_sk
+        description: "Surrogate key gerada via hash de full_date."
+        tests:
+          - unique
+          - not_null
+      - name: full_date
+        description: "Data completa no formato DATE. Usada no JOIN com fct_adw__sales."
+        tests:
+          - unique
+          - not_null
+      - name: year
+        description: "Ano com 4 dígitos (ex: 2011). Slicer e agrupamento."
+        tests:
+          - not_null
+      - name: quarter
+        description: "Trimestre numérico (1–4)."
+        tests:
+          - not_null
+      - name: month_number
+        description: "Mês numérico (1–12). Usar para classificar month_name no Power BI."
+        tests:
+          - not_null
+      - name: month_name
+        description: >
+          Nome do mês por extenso em inglês (ex: January).
+          No Power BI: Classificar por coluna → month_number.
+        tests:
+          - not_null
+      - name: year_month
+        description: >
+          Período no formato yyyy-MM (ex: 2011-01).
+          Eixo X dos gráficos de série temporal — ordena corretamente de forma alfanumérica.
+        tests:
+          - not_null
+      - name: year_quarter
+        description: "Período trimestral no formato 'Qn yyyy' (ex: Q1 2011)."
+        tests:
+          - not_null
+
+
+  - name: dim_adw__order
+    description: >
+      Dimensão técnica de pedidos. Granularidade: um registro por salesorderid.
+      Função exclusiva: ser o lado "um" do relacionamento entre fct_adw__sales
+      e bridge_adw__salesreason no Power BI, resolvendo o problema de duplicidade
+      de salesorderid na fato (que tem grain de linha de detalhe).
+      NÃO deve ser usada em slicers, visuais ou colunas calculadas no Power BI.
+      Contém apenas order_sk e salesorderid — sem atributos analíticos adicionais.
+    columns:
+      - name: order_sk
+        description: >
+          Surrogate key gerada via hash de salesorderid.
+          É o campo de relacionamento entre fct_adw__sales e bridge_adw__salesreason.
+        tests:
+          - unique
+          - not_null
+      - name: salesorderid
+        description: "Chave natural do pedido — garantidamente único nesta tabela."
+        tests:
+          - unique
+          - not_null
+
+
+  # ═══════════════════════════════════════════════════════════
+  # BRIDGE
+  # ═══════════════════════════════════════════════════════════
+
+  - name: bridge_adw__salesreason
+    description: >
+      Bridge table que resolve a relação N:N entre pedido e motivo de venda.
+      Granularidade: uma linha por combinação única order_sk + salesreason_sk.
+      Relacionamentos no Power BI:
+        dim_adw__order (1) ──[order_sk, filtro AMBOS]──(N) bridge
+        bridge         (N) ──[salesreason_sk, Único]──(1) dim_adw__salesreason
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "order_sk is not null and salesreason_sk is not null"
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - order_sk
+              - salesreason_sk
+    columns:
+      - name: bridge_sk
+        description: "Surrogate key gerada via hash de salesorderid + salesreasonid."
+        tests:
+          - unique
+          - not_null
+      - name: order_sk
+        description: >
+          FK para dim_adw__order. Lado N do relacionamento 1:N com dim_adw__order.
+          Configurar no Power BI com filtro cruzado: Ambos.
+        tests:
+          - not_null
+      - name: salesreason_sk
+        description: >
+          FK para dim_adw__salesreason. Lado N do relacionamento N:1 com a dimensão.
+          Configurar no Power BI com filtro cruzado: Único.
+        tests:
+          - not_null
+
+
+  # ═══════════════════════════════════════════════════════════
+  # FATO
+  # ═══════════════════════════════════════════════════════════
+
+  - name: fct_adw__sales
+    description: >
+      Tabela fato central de vendas. Granularidade: uma linha por salesorderdetailid.
+      Contém as métricas e FKs necessárias para responder às perguntas A–F.
+      Para análise por motivo de venda, usar bridge_adw__salesreason via dim_adw__order.
+      creditcard_sk pode ser nulo (pedidos realizados sem cartão de crédito).
+    tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "net_revenue <= gross_revenue"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "abs(net_revenue - (gross_revenue - discount_amount)) < 1"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "orderqty > 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "gross_revenue > 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "discount_amount >= 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "net_revenue >= 0"
+    columns:
+      - name: sales_sk
+        description: "Surrogate key da fato (hash de salesorderid + salesorderdetailid)."
+        tests:
+          - unique
+          - not_null
+      - name: salesorderid
+        description: >
+          Chave natural do pedido (cabeçalho). Repete-se quando um pedido tem múltiplos itens.
+          NÃO usar para relacionamentos no Power BI — usar order_sk.
+        tests:
+          - not_null
+      - name: salesorderdetailid
+        description: "Chave natural da linha do pedido. Único na fato."
+        tests:
+          - unique
+          - not_null
+      - name: order_sk
+        description: >
+          FK para dim_adw__order. Campo hub que conecta a fato à bridge no Power BI.
+          Configurar relacionamento: fct (N) ──[order_sk]──(1) dim_adw__order.
+        tests:
+          - not_null
+      - name: customer_sk
+        description: "FK para dim_adw__customer."
+        tests:
+          - not_null
+      - name: product_sk
+        description: "FK para dim_adw__product."
+        tests:
+          - not_null
+      - name: creditcard_sk
+        description: >
+          FK para dim_adw__creditcard.
+          Pode ser nulo — pedidos realizados sem cartão de crédito são válidos.
+      - name: status_sk
+        description: "FK para dim_adw__status."
+        tests:
+          - not_null
+      - name: order_date_sk
+        description: "FK para dim_adw__date (data em que o pedido foi realizado)."
+        tests:
+          - not_null
+      - name: orderqty
+        description: "Quantidade de itens comprados nesta linha do pedido."
+        tests:
+          - not_null
+      - name: gross_revenue
+        description: "Receita bruta da linha = orderqty × unitprice."
+        tests:
+          - not_null
+      - name: discount_amount
+        description: "Valor do desconto da linha = orderqty × unitprice × unitpricediscount."
+        tests:
+          - not_null
+      - name: net_revenue
+        description: "Receita líquida da linha = gross_revenue − discount_amount."
+        tests:
+          - not_null
+      - name: orderdate
+        description: >
+          Data do pedido em formato nativo DATE.
+          Mantida na fato para facilitar filtros rápidos sem necessidade de JOIN com dim_adw__date.
+        tests:
+          - not_null
