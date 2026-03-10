@@ -28,7 +28,7 @@ joined as (
         ,salesreason.reasontype
 
     from order_reason       
-    inner join salesreason  on order_reason.salesreasonid = salesreason.salesreasonid
+    left join salesreason  on order_reason.salesreasonid = salesreason.salesreasonid
 
 )
 

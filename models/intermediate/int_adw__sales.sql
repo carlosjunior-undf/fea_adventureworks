@@ -49,7 +49,7 @@ final as (
             as net_revenue
 
     from order_detail
-    inner join order_header
+    left join order_header
         on order_detail.salesorderid = order_header.salesorderid
 
 )

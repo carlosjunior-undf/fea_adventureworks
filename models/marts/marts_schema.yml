@@ -331,7 +331,7 @@ models:
             expression: "net_revenue <= gross_revenue"
       - dbt_utils.expression_is_true:
           arguments:
-            expression: "abs(net_revenue - (gross_revenue - discount_amount)) < 1"
+            expression: "abs(net_revenue - (gross_revenue - discount_amount)) < 0.88"
       - dbt_utils.expression_is_true:
           arguments:
             expression: "orderqty > 0"
