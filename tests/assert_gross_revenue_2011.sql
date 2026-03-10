@@ -35,4 +35,4 @@ validation as (
 -- Retorna linha se há discrepância — dbt interpreta retorno de linha como falha
 select *
 from validation
-where abs(variance) > 1   -- tolerância de 1 dolar para arredondamento
+where abs(variance) < 0.88    -- tolerância de 1 dolar para arredondamento

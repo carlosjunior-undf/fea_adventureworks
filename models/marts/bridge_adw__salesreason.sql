@@ -35,10 +35,8 @@ final as (
         ,dim_salesreason.salesreason_sk
 
     from order_reason
-    inner join dim_salesreason
-        on order_reason.salesreasonid = dim_salesreason.salesreasonid
-    inner join dim_order
-        on order_reason.salesorderid = dim_order.salesorderid
+    inner join dim_salesreason  on order_reason.salesreasonid = dim_salesreason.salesreasonid
+    inner join dim_order        on order_reason.salesorderid  = dim_order.salesorderid
 
 )
 
